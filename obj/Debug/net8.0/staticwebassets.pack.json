@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\Index.html",
+      "PackagePath": "staticwebassets\\Index.html"
+    },
+    {
+      "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\Resultados.html",
+      "PackagePath": "staticwebassets\\Resultados.html"
+    },
+    {
+      "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\css\\Style.css",
+      "PackagePath": "staticwebassets\\css\\Style.css"
+    },
+    {
+      "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\js\\alumno.js",
+      "PackagePath": "staticwebassets\\js\\alumno.js"
+    },
+    {
+      "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\js\\resultados.js",
+      "PackagePath": "staticwebassets\\js\\resultados.js"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Alumnos2026.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.Alumnos2026.props",
+      "PackagePath": "build\\Alumnos2026.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.Alumnos2026.props",
+      "PackagePath": "buildMultiTargeting\\Alumnos2026.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.Alumnos2026.props",
+      "PackagePath": "buildTransitive\\Alumnos2026.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
