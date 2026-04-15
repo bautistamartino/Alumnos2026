@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\Asignaturas.html",
+      "PackagePath": "staticwebassets\\Asignaturas.html"
+    },
+    {
       "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\Index.html",
       "PackagePath": "staticwebassets\\Index.html"
     },
@@ -15,6 +19,10 @@
     {
       "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\js\\alumno.js",
       "PackagePath": "staticwebassets\\js\\alumno.js"
+    },
+    {
+      "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\js\\asignatura.js",
+      "PackagePath": "staticwebassets\\js\\asignatura.js"
     },
     {
       "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\js\\resultados.js",

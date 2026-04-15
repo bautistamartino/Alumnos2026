@@ -1,5 +1,5 @@
 function ObtenerAlumnos() {
-fetch('https://localhost:7063/Alumno')
+fetch('https://localhost:7063/NotaAlumno')
 .then(response => response.json())
 .then(data => MostrarAlumnos(data))
 .catch(error => console.error('Error: No se puede acceder al servicio', error));
@@ -23,13 +23,27 @@ function MostrarAlumnos(data) {
 
 function CrearAlumno() {
   
-    let alumno = {
-        nombre: document.getElementById("Nombre").value,
-        dni: document.getElementById("Dni").value,
-        nota: document.getElementById("Nota").value,
+    let dni = document.getElementById("Dni").value;
+    let nota = document.getElementById("Nota").value;
+
+    // 🔴 VALIDACIONES
+    if (!/^\d{8}$/.test(dni)) {
+        alert("El DNI debe tener exactamente 8 números");
+        return;
     }
 
-    fetch('https://localhost:7063/Alumno',
+    if (nota < 1 || nota > 10) {
+        alert("La nota debe ser entre 1 y 10");
+        return;
+    }
+
+    let alumno = {
+        nombre: document.getElementById("Nombre").value,
+        dni: parseInt(dni),
+        nota: parseInt(nota),
+    }
+
+    fetch('https://localhost:7063/NotaAlumno',
         {
             method: 'POST',
             headers: {'Content-Type' : 'application/json'},
@@ -57,7 +71,7 @@ modal.hide();
 function EliminarAlumno(id) {
     if (!confirm("¿Seguro que desea eliminar este alumno?")) return;
 
-    fetch(`https://localhost:7063/Alumno/${id}`, {
+    fetch(`https://localhost:7063/NotaAlumno/${id}`, {
         method: 'DELETE'
     })
     .then(response => {
@@ -71,7 +85,7 @@ function EliminarAlumno(id) {
 }
 
 function BuscarAlumnoId(id) {
-    fetch(`https://localhost:7063/Alumno/${id}`, { method: 'GET' })
+    fetch(`https://localhost:7063/NotaAlumno/${id}`, { method: 'GET' })
     .then(response => {
         if (!response.ok) throw new Error("Error al buscar alumno");
         return response.json();
@@ -91,10 +105,22 @@ function EditarAlumno() {
     let alumno = {
         id: document.getElementById("IdAlumnoEditar").value,
         nombre: document.getElementById("NombreEditar").value,
-        dni: document.getElementById("DniEditar").value,
-        nota: document.getElementById("NotaEditar").value,
     }
-    fetch(`https://localhost:7063/Alumno/${alumno.id}`, {
+
+    let dni = document.getElementById("DniEditar").value;
+    let nota = document.getElementById("NotaEditar").value;
+
+if (!/^\d{8}$/.test(dni)) {
+    alert("El DNI debe tener 8 números");
+    return;
+}
+
+if (nota < 1 || nota > 10) {
+    alert("La nota debe ser entre 1 y 10");
+    return;
+}
+
+    fetch(`https://localhost:7063/NotaAlumno/${Alumno.id}`, {
     method: 'PUT',
     headers: { 'content-Type': 'application/json' },
     body: JSON.stringify(alumno)

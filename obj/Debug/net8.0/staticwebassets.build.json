@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "mUcETR+SMqspgYsOr3rqbK8GBruWpLYqcXPpMpVcr0A=",
+  "Hash": "3nDlkzndccpjgmfLV79ThRFH+rpxaPyXoyBUDH2uvJ4=",
   "Source": "Alumnos2026",
   "BasePath": "_content/Alumnos2026",
   "Mode": "Default",
@@ -16,6 +16,25 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\Asignaturas.html",
+      "SourceId": "Alumnos2026",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\",
+      "BasePath": "_content/Alumnos2026",
+      "RelativePath": "Asignaturas.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Asignaturas.html"
+    },
     {
       "Identity": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\css\\Style.css",
       "SourceId": "Alumnos2026",
@@ -72,6 +91,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\alumno.js"
+    },
+    {
+      "Identity": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\js\\asignatura.js",
+      "SourceId": "Alumnos2026",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\",
+      "BasePath": "_content/Alumnos2026",
+      "RelativePath": "js/asignatura.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\asignatura.js"
     },
     {
       "Identity": "C:\\Users\\Usuario\\Desktop\\BAUTI\\Alumnos2026\\wwwroot\\js\\resultados.js",

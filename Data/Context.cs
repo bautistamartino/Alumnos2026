@@ -12,5 +12,7 @@
             {
             }
 
-            public DbSet<models.Alumno> alumno { get; set; } = default!;
+            public DbSet<models.NotaAlumno> notaalumno { get; set; } = default!;
+
+public DbSet<models.Asignatura> Asignatura { get; set; } = default!;
         }

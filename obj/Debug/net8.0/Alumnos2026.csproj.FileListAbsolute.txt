@@ -251,3 +251,4 @@ C:\Users\Usuario\Desktop\BAUTI\Alumnos2026\obj\Debug\net8.0\refint\Alumnos2026.d
 C:\Users\Usuario\Desktop\BAUTI\Alumnos2026\obj\Debug\net8.0\Alumnos2026.pdb
 C:\Users\Usuario\Desktop\BAUTI\Alumnos2026\obj\Debug\net8.0\Alumnos2026.genruntimeconfig.cache
 C:\Users\Usuario\Desktop\BAUTI\Alumnos2026\obj\Debug\net8.0\ref\Alumnos2026.dll
+C:\Users\Usuario\Desktop\BAUTI\Alumnos2026\obj\Debug\net8.0\Alumnos2026.sourcelink.json

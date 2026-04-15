@@ -29,19 +29,19 @@ namespace Alumnos2026.Controllers
 
             
                 // Promedio
-                var sumaNotas = _context.alumno.Sum(a => a.Nota);
-                var cantidadAlumnos = _context.alumno.Count();
+                var sumaNotas = _context.notaalumno.Sum(a => a.Nota);
+                var cantidadAlumnos = _context.notaalumno.Count();
                 resultado.Promedio = Decimal.Round((decimal)sumaNotas / cantidadAlumnos, 2);
 
                 // Nota mas alta y alumno con nota mas alta
-                resultado.NotaMasAlta = _context.alumno.Max(a => a.Nota);
+                resultado.NotaMasAlta = _context.notaalumno.Max(a => a.Nota);
                 
                 // Nota mas baja y alumno con nota mas baja
-                resultado.NotaMasBaja =  _context.alumno.Min(a => a.Nota);
+                resultado.NotaMasBaja =  _context.notaalumno.Min(a => a.Nota);
                
                 // Cantidad de aprobados y desaprobados
-                resultado.CantidadAprobados = _context.alumno.Where(a => a.Nota >= 6).Count();
-                resultado.CantidadDesaprobados = _context.alumno.Where(a => a.Nota < 6).Count();
+                resultado.CantidadAprobados = _context.notaalumno.Where(a => a.Nota >= 6).Count();
+                resultado.CantidadDesaprobados = _context.notaalumno.Where(a => a.Nota < 6).Count();
 
                 if(resultado.Promedio >= 6){
                     resultado.EstadoDelGrupo = "Grupo Aprobado";
@@ -52,11 +52,11 @@ namespace Alumnos2026.Controllers
                 }
 
                 
-                var alumnoMax = _context.alumno
+                var alumnoMax = _context.notaalumno
                 .OrderByDescending(a => a.Nota)
                 .FirstOrDefault();
 
-                var alumnoMin = _context.alumno
+                var alumnoMin = _context.notaalumno
                 .OrderBy(a => a.Nota)
                 .FirstOrDefault();
 
