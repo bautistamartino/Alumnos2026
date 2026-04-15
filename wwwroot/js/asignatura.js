@@ -43,7 +43,7 @@ function CrearAsignatura() {
         document.getElementById("Descripcion").value = "";
         document.getElementById("Eliminado").value = "";
 
-        ObtenerAsignaturas(); // 🔥 actualizar tabla
+        ObtenerAsignaturas(); 
     })
     .catch(error => console.log("Error al guardar asignatura:", error));
 }
@@ -60,7 +60,7 @@ function EliminarAsignatura(id) {
         return; // NO json()
     })
     .then(() => {
-        ObtenerAsignaturas(); // 🔥 actualiza tabla
+        ObtenerAsignaturas(); 
     })
     .catch(error => console.error("Error al eliminar:", error));
 }

@@ -26,7 +26,7 @@ function CrearAlumno() {
     let dni = document.getElementById("Dni").value;
     let nota = document.getElementById("Nota").value;
 
-    // 🔴 VALIDACIONES
+    //  Validaciones
     if (!/^\d{8}$/.test(dni)) {
         alert("El DNI debe tener exactamente 8 números");
         return;
@@ -79,7 +79,7 @@ function EliminarAlumno(id) {
         return; // NO json()
     })
     .then(() => {
-        ObtenerAlumnos(); // 🔥 actualiza tabla
+        ObtenerAlumnos(); 
     })
     .catch(error => console.error("Error al eliminar:", error));
 }
@@ -110,6 +110,8 @@ function EditarAlumno() {
     let dni = document.getElementById("DniEditar").value;
     let nota = document.getElementById("NotaEditar").value;
 
+
+    // Validaciones 
 if (!/^\d{8}$/.test(dni)) {
     alert("El DNI debe tener 8 números");
     return;
