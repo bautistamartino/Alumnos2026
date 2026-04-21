@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas Alumnos</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="css/Style.css">
+</head>
+
+<body class="bg1">
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary"  data-bs-theme="dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="Alumno.html">Alumnos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="Docente.html">Docente</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="Asignaturas.html">Asignaturas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="NotaAlumno.html">Notas de alumnos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="Resultados.html">Resultados</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Tabla -->
+<div class="container mt-4">
+    <h1>Notas Alumnos</h1>
+    <hr>
+
+    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#ModalAgregarNotaAlumno">
+        Agregar
+    </button>
+
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Alumno</th>
+                <th>Asignatura</th>
+                <th>Nota</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="TablaNotas"></tbody>
+    </table>
+</div>
+
+<!-- MODAL CREAR -->
+<div class="modal fade" id="ModalAgregarNotaAlumno" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content text-dark">
+
+            <div class="modal-header">
+                <h5>Agregar Nota</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <select id="AlumnoId" class="form-select mb-2"></select>
+
+                <select id="AsignaturaId" class="form-select mb-2"></select>
+
+                <input type="number" id="Nota" class="form-control" placeholder="Nota (1-10)">
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="CrearNota()">Guardar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div class="modal fade" id="ModalEditarNotaAlumno" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content text-dark">
+
+            <div class="modal-header">
+                <h5>Editar Nota</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden" id="IdEditar">
+
+                <select id="AlumnoIdEditar" class="form-select mb-2"></select>
+
+                <select id="AsignaturaIdEditar" class="form-select mb-2"></select>
+
+                <input type="number" id="NotaEditar" class="form-control">
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="EditarNota()">Guardar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/notaalumno.js"> </script>
+
+<script>
+    window.onload = function () {
+        ObtenerNotas();
+        CargarAlumnos();
+        CargarAsignaturas();
+    };
+</script>
+
+</body>
+</html>
