@@ -1,9 +1,9 @@
 function cargarResultados() {
-    fetch('https://localhost:7177/Resultados') // ⚠️ cambiá el puerto si es necesario
+    fetch('https://localhost:7177/Resultados') 
     .then(response => response.json())
     .then(data => {
         let tabla = document.getElementById("TodosLosResultados");
-        tabla.innerHTML = ""; // limpiar
+        tabla.innerHTML = ""; 
 
         let fila = `
             <tr>

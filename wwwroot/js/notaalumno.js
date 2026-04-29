@@ -15,6 +15,7 @@ function MostrarNotas(data) {
                 <td>${n.alumno?.nombreCompleto ?? n.alumnoId}</td>
                 <td>${n.asignatura?.descripcion ?? n.asignaturaId}</td>
                 <td>${n.nota}</td>
+                <td>${n.fecha}</td>
                 <td><button class="btn btn-info" onclick="BuscarNota(${n.notaAlumnoId})">Editar</button></td>
                 <td><button class="btn btn-danger" onclick="EliminarNota(${n.notaAlumnoId})">Eliminar</button></td>
             </tr>
@@ -30,10 +31,15 @@ function CargarAlumnos() {
         let select = $("#AlumnoId, #AlumnoIdEditar");
         select.empty();
 
+        select.append(`<option value="" selected disabled>Seleccione un alumno</option>`);
+
         data.forEach(a => {
             select.append(`<option value="${a.alumnoId}">${a.nombreCompleto}</option>`);
         });
     });
+    $('#ModalAgregarNotaAlumno').on('show.bs.modal', function () {
+    $("#AlumnoId").val("");
+});
 }
 
 function CargarAsignaturas() {
@@ -43,10 +49,16 @@ function CargarAsignaturas() {
         let select = $("#AsignaturaId, #AsignaturaIdEditar");
         select.empty();
 
+        select.append(`<option value="" selected disabled>Seleccione una asignatura</option>`);
+
         data.forEach(a => {
             select.append(`<option value="${a.asignaturaId}">${a.descripcion}</option>`);
         });
+        
     });
+    $('#ModalAgregarNotaAlumno').on('show.bs.modal', function () {
+    $("#AsignaturaId").val("");
+});
 }
 
 function CrearNota() {
@@ -61,7 +73,8 @@ function CrearNota() {
     let obj = {
         alumnoId: parseInt(document.getElementById("AlumnoId").value),
         asignaturaId: parseInt(document.getElementById("AsignaturaId").value),
-        nota: parseInt(nota)
+        nota: parseInt(nota),
+        fecha: document.getElementById("fecha").value
     };
 
     fetch('https://localhost:7177/NotaAlumno', {
@@ -91,6 +104,7 @@ function BuscarNota(id) {
         document.getElementById("AlumnoIdEditar").value = n.alumnoId;
         document.getElementById("AsignaturaIdEditar").value = n.asignaturaId;
         document.getElementById("NotaEditar").value = n.nota;
+        document.getElementById("fechaEditar").value = n.fecha;
 
         new bootstrap.Modal(document.getElementById('ModalEditarNotaAlumno')).show();
     });
@@ -109,7 +123,8 @@ function EditarNota() {
         notaAlumnoId: parseInt(document.getElementById("IdEditar").value),
         alumnoId: parseInt(document.getElementById("AlumnoIdEditar").value),
         asignaturaId: parseInt(document.getElementById("AsignaturaIdEditar").value),
-        nota: parseInt(document.getElementById("NotaEditar").value)
+        nota: parseInt(document.getElementById("NotaEditar").value),
+        fecha: document.getElementById("fechaEditar").value
     };
 
     fetch(`https://localhost:7177/NotaAlumno/${obj.notaAlumnoId}`, {

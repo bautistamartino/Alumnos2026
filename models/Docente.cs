@@ -7,6 +7,8 @@ public class Docente
     public int DNI { get; set; }
 
     public Sexo Sexo { get; set; }
+
+    public ICollection<NotaAlumno>? NotaAlumnos { get; set; }
 }
 
 public enum Sexo

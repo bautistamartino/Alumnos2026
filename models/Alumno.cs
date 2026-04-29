@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 
+
 public class Alumno
 {
     public int AlumnoId { get; set; }
@@ -13,5 +14,6 @@ public class Alumno
     public string Domicilio { get; set; } = null!;
 
     [JsonIgnore] 
-    public List<NotaAlumno>? Notas { get; set; }
+    public ICollection<NotaAlumno>? Notas { get; set; }
 }
+

@@ -6,6 +6,7 @@ using ClasesVistas;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using _2026Alumnos.ClasesVistas;
 
 namespace Alumnos2026.Controllers
 {
@@ -30,12 +31,12 @@ namespace Alumnos2026.Controllers
 
             
                 // Promedio
-                var cantidadAlumnos = _context.NotaAlumno.Count();
+                var cantidadNotas = _context.NotaAlumno.Count();
 
-                if (cantidadAlumnos > 0)
+                if (cantidadNotas > 0)
             {
                 var sumaNotas = _context.NotaAlumno.Sum(a => a.Nota);
-                resultado.Promedio = Decimal.Round((decimal)sumaNotas / cantidadAlumnos, 2);
+                resultado.Promedio = Decimal.Round((decimal)sumaNotas / cantidadNotas, 2);
             }
                 else
             {

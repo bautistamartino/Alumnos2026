@@ -251,3 +251,4 @@ C:\Users\Usuario\Desktop\BAUTI\2026Alumnos\obj\Debug\net8.0\2026Alumnos.pdb
 C:\Users\Usuario\Desktop\BAUTI\2026Alumnos\obj\Debug\net8.0\2026Alumnos.genruntimeconfig.cache
 C:\Users\Usuario\Desktop\BAUTI\2026Alumnos\obj\Debug\net8.0\ref\2026Alumnos.dll
 C:\Users\Usuario\Desktop\BAUTI\2026Alumnos\bin\Debug\net8.0\2026Alumnos.staticwebassets.runtime.json
+C:\Users\Usuario\Desktop\BAUTI\2026Alumnos\obj\Debug\net8.0\2026Alumnos.sourcelink.json

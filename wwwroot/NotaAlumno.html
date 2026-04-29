@@ -57,6 +57,7 @@
                 <th>Alumno</th>
                 <th>Asignatura</th>
                 <th>Nota</th>
+                <th>Fecha</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -77,11 +78,19 @@
 
             <div class="modal-body">
 
+                <label class="form-label">Nombre alumno</label>
                 <select id="AlumnoId" class="form-select mb-2"></select>
 
+                <label class="form-label">Asignatura</label>
                 <select id="AsignaturaId" class="form-select mb-2"></select>
 
+                <label class="form-label">Nota</label>
                 <input type="number" id="Nota" class="form-control" placeholder="Nota (1-10)">
+
+                <label class="form-label">Fecha</label>
+                <input type="date" id="fecha" class="form-control" >
+
+
 
             </div>
 
@@ -108,11 +117,17 @@
 
                 <input type="hidden" id="IdEditar">
 
+                <label class="form-label">Nombre alumno</label>
                 <select id="AlumnoIdEditar" class="form-select mb-2"></select>
 
+                <label class="form-label">Asignatura</label>
                 <select id="AsignaturaIdEditar" class="form-select mb-2"></select>
 
+                <label class="form-label">Nota</label>
                 <input type="number" id="NotaEditar" class="form-control">
+
+                <label class="form-label">Fecha</label>
+                <input type="date" id="fechaEditar" class="form-control" >
 
             </div>
 

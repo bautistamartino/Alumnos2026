@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace _2026Alumnos.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20260422001430_AgregarFechaNota")]
+    partial class AgregarFechaNota
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,11 +108,8 @@ namespace _2026Alumnos.Migrations
                     b.Property<int>("AsignaturaId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DocenteId")
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("Fecha")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Nota")
                         .HasColumnType("int");
@@ -119,8 +119,6 @@ namespace _2026Alumnos.Migrations
                     b.HasIndex("AlumnoId");
 
                     b.HasIndex("AsignaturaId");
-
-                    b.HasIndex("DocenteId");
 
                     b.ToTable("NotaAlumno");
                 });
@@ -139,10 +137,6 @@ namespace _2026Alumnos.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Docente", null)
-                        .WithMany("NotaAlumnos")
-                        .HasForeignKey("DocenteId");
-
                     b.Navigation("Alumno");
 
                     b.Navigation("Asignatura");
@@ -151,11 +145,6 @@ namespace _2026Alumnos.Migrations
             modelBuilder.Entity("Alumno", b =>
                 {
                     b.Navigation("Notas");
-                });
-
-            modelBuilder.Entity("Docente", b =>
-                {
-                    b.Navigation("NotaAlumnos");
                 });
 #pragma warning restore 612, 618
         }
