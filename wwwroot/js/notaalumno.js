@@ -63,11 +63,57 @@ function CargarAsignaturas() {
 
 function CrearNota() {
 
+    let alumnoId = document.getElementById("AlumnoId").value;
+    let asignaturaId = document.getElementById("AsignaturaId").value;
     let nota = document.getElementById("Nota").value;
+    let fecha = document.getElementById("fecha").value;
 
-    if (nota < 1 || nota > 10) {
-        alert("Nota inválida");
+    if (!alumnoId) {
+        document.getElementById("AlumnoId").classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Falta seleccionar',
+            text: 'Debes seleccionar un alumno'
+        });
         return;
+    } else {
+        document.getElementById("AlumnoId").classList.remove("is-invalid");
+    }
+
+    if (!asignaturaId) {
+        document.getElementById("AsignaturaId").classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Falta seleccionar',
+            text: 'Debes seleccionar una asignatura'
+        });
+        return;
+    } else {
+        document.getElementById("AsignaturaId").classList.remove("is-invalid");
+    }
+    
+    if (nota < 1 || nota > 10) {
+        Swal.fire({
+        icon: 'error',
+        title: 'Nota inválida',
+        text: 'La nota debe estar entre 1 y 10'
+    });
+        return;
+    }
+
+     if (!fecha) {
+        document.getElementById("fecha").classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Falta fecha',
+            text: 'Debes seleccionar una fecha'
+        });
+        return;
+    } else {
+        document.getElementById("fecha").classList.remove("is-invalid");
     }
 
     let obj = {
@@ -104,7 +150,7 @@ function BuscarNota(id) {
         document.getElementById("AlumnoIdEditar").value = n.alumnoId;
         document.getElementById("AsignaturaIdEditar").value = n.asignaturaId;
         document.getElementById("NotaEditar").value = n.nota;
-        document.getElementById("fechaEditar").value = n.fecha;
+        document.getElementById("fechaEditar").value = n.fecha.split('T')[0];
 
         new bootstrap.Modal(document.getElementById('ModalEditarNotaAlumno')).show();
     });
@@ -112,13 +158,58 @@ function BuscarNota(id) {
 
 function EditarNota() {
 
-    let nota = document.getElementById("NotaEditar").value;
+let alumnoId = document.getElementById("AlumnoIdEditar").value;
+let asignaturaId = document.getElementById("AsignaturaIdEditar").value;
+let nota = document.getElementById("NotaEditar").value;
+let fecha = document.getElementById("fechaEditar").value;
 
+    if (!alumnoId) {
+        document.getElementById("AlumnoId").classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Falta seleccionar',
+            text: 'Debes seleccionar un alumno'
+        });
+        return;
+    } else {
+        document.getElementById("AlumnoId").classList.remove("is-invalid");
+    }
+
+    if (!asignaturaId) {
+        document.getElementById("AsignaturaId").classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Falta seleccionar',
+            text: 'Debes seleccionar una asignatura'
+        });
+        return;
+    } else {
+        document.getElementById("AsignaturaId").classList.remove("is-invalid");
+    }
+    
     if (nota < 1 || nota > 10) {
-        alert("Nota inválida");
+        Swal.fire({
+        icon: 'error',
+        title: 'Nota inválida',
+        text: 'La nota debe estar entre 1 y 10'
+    });
         return;
     }
 
+     if (!fecha) {
+        document.getElementById("fecha").classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Falta fecha',
+            text: 'Debes seleccionar una fecha'
+        });
+        return;
+    } else {
+        document.getElementById("fecha").classList.remove("is-invalid");
+    }
     let obj = {
         notaAlumnoId: parseInt(document.getElementById("IdEditar").value),
         alumnoId: parseInt(document.getElementById("AlumnoIdEditar").value),

@@ -76,21 +76,34 @@ namespace _2026Alumnos.Controllers
         [HttpPost]
         public async Task<ActionResult<Alumno>> PostAlumno(Alumno alumno)
         {
+            // NORMALIZAR
+            alumno.NombreCompleto = alumno.NombreCompleto?.Trim().ToUpper();
+            alumno.Domicilio = alumno.Domicilio?.Trim().ToUpper();
+            alumno.DNI = alumno.DNI?.Trim();
 
-               if (!string.IsNullOrEmpty(alumno.NombreCompleto))
+            // VALIDACIONES
+            if (string.IsNullOrWhiteSpace(alumno.NombreCompleto))
             {
-                alumno.NombreCompleto = alumno.NombreCompleto?.ToUpper();
+                return BadRequest(new { mensaje = "El nombre es obligatorio." });
             }
 
-            if (!string.IsNullOrEmpty(alumno.Domicilio))
+            if (string.IsNullOrWhiteSpace(alumno.DNI))
             {
-                alumno.Domicilio = alumno.Domicilio?.ToUpper();
+                return BadRequest(new { mensaje = "El DNI es obligatorio." });
             }
-            var alumnoExiste = await _context.Alumno.Where(t => t.DNI == alumno.DNI).FirstOrDefaultAsync();
 
-            if (alumnoExiste != null)
+            if (!System.Text.RegularExpressions.Regex.IsMatch(alumno.DNI, @"^\d{8}$"))
             {
-                return Conflict(new { mensaje = "Ya existe un alumno con ese dni." });
+                return BadRequest(new { mensaje = "El DNI debe tener 8 números." });
+            }
+
+            // VALIDAR DUPLICADO
+            var existe = await _context.Alumno
+                .AnyAsync(t => t.DNI == alumno.DNI);
+
+            if (existe)
+            {
+                return Conflict(new { mensaje = "Ya existe un alumno con ese DNI." });
             }
 
             _context.Alumno.Add(alumno);

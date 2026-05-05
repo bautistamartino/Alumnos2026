@@ -10,7 +10,7 @@ namespace _2026Alumnos.ClasesVistas
 
         public decimal promedio {get; set;}
 
-        public int DNI {get; set;}
+        public string? DNI {get; set;}
     }
 
     

@@ -35,6 +35,11 @@ function MostrarAlumnos(data) {
     });
 }
 
+const dnicrear = document.getElementById("Dni");
+dnicrear.addEventListener("input", function() {
+    this.value = this.value.replace(/\D/g, "").slice(0, 8);
+});
+
 function CrearAlumno() {
 
     let nombre = document.getElementById("Nombre").value.trim();
@@ -42,29 +47,65 @@ function CrearAlumno() {
     let sexo = document.getElementById("Sexo").value;
     let domicilio = document.getElementById("Domicilio").value.trim();
 
+    // VALIDAR NOMBRE
     if (nombre === "") {
-        alert("El nombre es obligatorio");
+        document.getElementById("Nombre").classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo obligatorio',
+            text: 'El nombre es obligatorio'
+        });
         return;
+    } else {
+        document.getElementById("Nombre").classList.remove("is-invalid");
     }
 
+    // VALIDAR DNI
     if (!/^\d{8}$/.test(dni)) {
-        alert("El DNI debe tener 8 números");
+        document.getElementById("Dni").classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'error',
+            title: 'DNI inválido',
+            text: 'El DNI debe tener 8 números'
+        });
         return;
+    } else {
+        document.getElementById("Dni").classList.remove("is-invalid");
     }
 
-    if (sexo === "") {
-        alert("Seleccione un sexo");
+    // VALIDAR SEXO
+    if (!sexo) {
+        document.getElementById("Sexo").classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Falta seleccionar',
+            text: 'Debe seleccionar un sexo'
+        });
         return;
+    } else {
+        document.getElementById("Sexo").classList.remove("is-invalid");
     }
 
     if (domicilio === "") {
-        alert("El domicilio es obligatorio");
+        document.getElementById("Domicilio").classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo obligatorio',
+            text: 'El domicilio es obligatorio'
+        });
         return;
+    } else {
+        document.getElementById("Domicilio").classList.remove("is-invalid");
     }
+
 
     let alumno = {
         nombreCompleto: nombre,
-        dni: parseInt(dni),
+        dni: dni,
         sexo: parseInt(sexo),
         domicilio: domicilio
     };
@@ -165,7 +206,7 @@ function EditarAlumno() {
     let alumno = {
         alumnoId: document.getElementById("IdAlumnoEditar").value,
         nombreCompleto: nombre,
-        dni: parseInt(dni),
+        dni: dni,
         sexo: parseInt(sexo),
         domicilio: domicilio
     };

@@ -22,10 +22,26 @@ function MostrarAsignatura(data) {
 }
 
 function CrearAsignatura() {
+
+    let descripcion = document.getElementById("Descripcion").value.trim();
+
     let asignatura = {
-        descripcion: document.getElementById("Descripcion").value,
+        descripcion: descripcion,
         eliminado: document.getElementById("Eliminado").checked
     };
+
+    if (descripcion === "") {
+        document.getElementById("Descripcion").classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo obligatorio',
+            text: 'La descripción es obligatoria'
+        });
+        return;
+    } else {
+        document.getElementById("Descripcion").classList.remove("is-invalid");
+    }
 
     fetch('https://localhost:7177/Asignatura', {
         method: 'POST',

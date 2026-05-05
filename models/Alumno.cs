@@ -7,7 +7,7 @@ public class Alumno
 
     public string NombreCompleto { get; set; } = null!;
 
-    public int DNI { get; set; }   
+    public string? DNI { get; set; }   
 
     public Sexo Sexo { get; set; }
 
