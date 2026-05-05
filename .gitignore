@@ -56,7 +56,7 @@ dkms.conf
 
 
 # Excluimos los archivos OBJ, BIN y la carpeta .vs ya que se crean nuevamente al ejecutarse.
-/ApiAlumnos2026/bin/
-/ApiAlumnos2026/obj/
+/2026Alumnos/bin/
+/2026Alumnos/obj/
 /.vs
-/ApiAlumnos2026/.vs
+/2026Alumnos/.vs
