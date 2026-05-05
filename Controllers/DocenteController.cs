@@ -76,6 +76,14 @@ namespace _2026Alumnos.Controllers
         [HttpPost]
         public async Task<ActionResult<Docente>> PostDocente(Docente docente)
         {
+
+            var docenteExiste = await _context.Docente.Where(t => t.DNI == docente.DNI).FirstOrDefaultAsync();
+
+            if (docenteExiste != null)
+            {
+                return Conflict(new { mensaje = "Ya existe un docente con ese dni." });
+            }
+
             _context.Docente.Add(docente);
             await _context.SaveChangesAsync();
 

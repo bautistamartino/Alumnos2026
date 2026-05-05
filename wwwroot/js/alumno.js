@@ -75,7 +75,13 @@ function CrearAlumno() {
         body: JSON.stringify(alumno)
     })
     .then(response => {
-        if (!response.ok) throw new Error("Error al crear");
+
+        if (!response.ok) {
+            return response.json().then(err => {
+                throw new Error(err.mensaje || "Error al crear alumno");
+            });
+        }
+
         return response.json();
     })
     .then(() => {
@@ -89,8 +95,10 @@ function CrearAlumno() {
 
         ObtenerAlumnos();
     })
-    .catch(error => console.error(error));
+    .catch(error => {
+        alert(error.message); });
 }
+
 
 function EliminarAlumno(id) {
     if (!confirm("¿Seguro que desea eliminar este alumno?")) return;

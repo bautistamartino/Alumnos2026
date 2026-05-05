@@ -15,7 +15,7 @@ function MostrarNotas(data) {
                 <td>${n.alumno?.nombreCompleto ?? n.alumnoId}</td>
                 <td>${n.asignatura?.descripcion ?? n.asignaturaId}</td>
                 <td>${n.nota}</td>
-                <td>${n.fecha}</td>
+                <td>${new Date(n.fecha).toLocaleDateString('es-AR')}</td>
                 <td><button class="btn btn-info" onclick="BuscarNota(${n.notaAlumnoId})">Editar</button></td>
                 <td><button class="btn btn-danger" onclick="EliminarNota(${n.notaAlumnoId})">Eliminar</button></td>
             </tr>

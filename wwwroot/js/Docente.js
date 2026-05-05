@@ -67,7 +67,11 @@ function CrearDocente() {
         body: JSON.stringify(docente)
     })
     .then(response => {
-        if (!response.ok) throw new Error("Error al crear");
+        if (!response.ok) {
+            return response.json().then(err => {
+                throw new Error(err.mensaje || "Error al crear docente");
+            });
+        }
         return response.json();
     })
     .then(() => {
@@ -80,7 +84,8 @@ function CrearDocente() {
 
         ObtenerDocentes();
     })
-    .catch(error => console.error(error));
+        .catch(error => {
+        alert(error.message); });
 }
 
 function EliminarDocente(id) {

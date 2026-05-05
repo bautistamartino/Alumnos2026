@@ -76,6 +76,23 @@ namespace _2026Alumnos.Controllers
         [HttpPost]
         public async Task<ActionResult<Alumno>> PostAlumno(Alumno alumno)
         {
+
+               if (!string.IsNullOrEmpty(alumno.NombreCompleto))
+            {
+                alumno.NombreCompleto = alumno.NombreCompleto?.ToUpper();
+            }
+
+            if (!string.IsNullOrEmpty(alumno.Domicilio))
+            {
+                alumno.Domicilio = alumno.Domicilio?.ToUpper();
+            }
+            var alumnoExiste = await _context.Alumno.Where(t => t.DNI == alumno.DNI).FirstOrDefaultAsync();
+
+            if (alumnoExiste != null)
+            {
+                return Conflict(new { mensaje = "Ya existe un alumno con ese dni." });
+            }
+
             _context.Alumno.Add(alumno);
             await _context.SaveChangesAsync();
 
