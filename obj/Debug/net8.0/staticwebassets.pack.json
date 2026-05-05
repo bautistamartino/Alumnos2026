@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets\\Index.html"
     },
     {
+      "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\2026Alumnos\\wwwroot\\Informe.html",
+      "PackagePath": "staticwebassets\\Informe.html"
+    },
+    {
       "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\2026Alumnos\\wwwroot\\NotaAlumno.html",
       "PackagePath": "staticwebassets\\NotaAlumno.html"
     },
@@ -39,6 +43,10 @@
     {
       "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\2026Alumnos\\wwwroot\\js\\asignatura.js",
       "PackagePath": "staticwebassets\\js\\asignatura.js"
+    },
+    {
+      "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\2026Alumnos\\wwwroot\\js\\informeAlumnoPromedio.js",
+      "PackagePath": "staticwebassets\\js\\informeAlumnoPromedio.js"
     },
     {
       "Id": "C:\\Users\\Usuario\\Desktop\\BAUTI\\2026Alumnos\\wwwroot\\js\\notaalumno.js",

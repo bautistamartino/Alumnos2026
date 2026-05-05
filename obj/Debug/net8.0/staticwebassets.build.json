@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "7vbFRyUOjO+fhf8YzkBAYgCCoCzKXdixXJIeULV+2zM=",
+  "Hash": "qZ5hkrz5XXHy+y5C2DSoDkCU9exPmOi4zAB+AN1K/Fc=",
   "Source": "2026Alumnos",
   "BasePath": "_content/2026Alumnos",
   "Mode": "Default",
@@ -112,6 +112,25 @@
       "OriginalItemSpec": "wwwroot\\Index.html"
     },
     {
+      "Identity": "C:\\Users\\Usuario\\Desktop\\BAUTI\\2026Alumnos\\wwwroot\\Informe.html",
+      "SourceId": "2026Alumnos",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Usuario\\Desktop\\BAUTI\\2026Alumnos\\wwwroot\\",
+      "BasePath": "_content/2026Alumnos",
+      "RelativePath": "Informe.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Informe.html"
+    },
+    {
       "Identity": "C:\\Users\\Usuario\\Desktop\\BAUTI\\2026Alumnos\\wwwroot\\js\\alumno.js",
       "SourceId": "2026Alumnos",
       "SourceType": "Discovered",
@@ -167,6 +186,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\Docente.js"
+    },
+    {
+      "Identity": "C:\\Users\\Usuario\\Desktop\\BAUTI\\2026Alumnos\\wwwroot\\js\\informeAlumnoPromedio.js",
+      "SourceId": "2026Alumnos",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Usuario\\Desktop\\BAUTI\\2026Alumnos\\wwwroot\\",
+      "BasePath": "_content/2026Alumnos",
+      "RelativePath": "js/informeAlumnoPromedio.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\informeAlumnoPromedio.js"
     },
     {
       "Identity": "C:\\Users\\Usuario\\Desktop\\BAUTI\\2026Alumnos\\wwwroot\\js\\notaalumno.js",
