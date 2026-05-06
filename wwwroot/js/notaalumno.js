@@ -18,6 +18,7 @@ function MostrarNotas(data) {
                 <td>${new Date(n.fecha).toLocaleDateString('es-AR')}</td>
                 <td><button class="btn btn-info" onclick="BuscarNota(${n.notaAlumnoId})">Editar</button></td>
                 <td><button class="btn btn-danger" onclick="EliminarNota(${n.notaAlumnoId})">Eliminar</button></td>
+                <td><button class="btn btn-warning" onclick="HistorialNota(${n.notaAlumnoId})">Historial</button></td>
             </tr>
         `);
     });
@@ -244,3 +245,10 @@ function EliminarNota(id) {
     .then(() => ObtenerNotas());
 }
 
+function HistorialNota(id) {
+    let IdHistorial = document.getElementById("IdHistorial").value;
+    let CampoModificado = document.getElementById("CampoModificado").value;
+    let ValorAnterior = document.getElementById("ValorAnterior").value;
+    let ValorNuevo = document.getElementById("ValorNuevo").value;
+    let FechaCambio = document.getElementById("fechaEditar").value;
+}

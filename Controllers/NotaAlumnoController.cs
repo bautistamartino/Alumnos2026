@@ -49,6 +49,7 @@ namespace _2026Alumnos.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutNotaAlumno(int id, NotaAlumno notaAlumno)
         {
+
             if (id != notaAlumno.NotaAlumnoId)
             {
                 return BadRequest();
@@ -60,6 +61,7 @@ namespace _2026Alumnos.Controllers
             {
                 await _context.SaveChangesAsync();
             }
+            
             catch (DbUpdateConcurrencyException)
             {
                 if (!NotaAlumnoExists(id))

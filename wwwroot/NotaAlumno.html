@@ -39,6 +39,9 @@
         <li class="nav-item">
           <a class="nav-link" href="Informe.html">Informe</a>
         </li>
+         <li class="nav-item">
+          <a class="nav-link active" href="InformeXasignatura.html">Informe por Asignatura</a>
+        </li>
       </ul>
     </div>
   </div>
@@ -61,6 +64,7 @@
                 <th>Asignatura</th>
                 <th>Nota</th>
                 <th>Fecha</th>
+                <th></th>
                 <th></th>
                 <th></th>
             </tr>
@@ -131,6 +135,43 @@
 
                 <label class="form-label">Fecha</label>
                 <input type="date" id="fechaEditar" class="form-control" >
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="EditarNota()">Guardar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL HISTORIAL -->
+<div class="modal fade" id="ModalHistorialNotaAlumno" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content text-dark">
+
+            <div class="modal-header">
+                <h5>Historial de Notas</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden" id="IdHistorial">
+
+                <label class="form-label">Campo modificado</label>
+                <select id="CampoModificado" class="form-select mb-2"></select>
+
+                <label class="form-label">Valor Anterior</label>
+                <select id="ValorAnterior" class="form-select mb-2"></select>
+
+                <label class="form-label">Valor Nuevo</label>
+                <inputid="ValorNuevo" class="form-control">
+
+                <label class="form-label">Fecha del cambio</label>
+                <input type="datetime-local" id="fechaEditar" class="form-control" >
 
             </div>
 

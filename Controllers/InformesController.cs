@@ -71,5 +71,64 @@ namespace _2026Alumnos.Controllers
             return alumnosMostrar.ToList();            
         }
 
-    }
+    
+
+    
+        [HttpPost("promedioasignaturas")]
+        public async Task<ActionResult<IEnumerable<PromedioNotaAsignatura>>> PostAsignaturaPromedio(FiltroNotaAsignatura filtro)
+        {
+            
+            List<PromedioNotaAsignatura> asignaturasMostrar = new List<PromedioNotaAsignatura>();
+
+            var asignaturas = await _context.Asignatura.ToListAsync();
+
+            foreach (var asignatura in asignaturas)  
+            {
+                var notasAsignatura = await _context.NotaAlumno.Where(n => n.AsignaturaId == asignatura.AsignaturaId).ToListAsync();
+                if (filtro.AsignaturaID > 0)
+                {
+                    notasAsignatura = notasAsignatura.Where(n => n.AsignaturaId == filtro.AsignaturaID).ToList();
+                }
+                
+                if (filtro.AlumnoID > 0)
+                {
+                    notasAsignatura = notasAsignatura.Where(n => n.AlumnoId == filtro.AlumnoID).ToList();
+                }
+
+                 DateTime fechaDesde = new DateTime();
+                bool fechaDesdeValida = DateTime.TryParse(filtro.FechaDesde, out fechaDesde);
+
+                DateTime fechaHasta = new DateTime();
+                bool fechaHastaValida = DateTime.TryParse(filtro.FechaHasta, out fechaHasta);
+
+                if (fechaDesdeValida && fechaHastaValida)
+                {
+                    fechaHasta = fechaHasta.AddHours(23);
+                    fechaHasta = fechaHasta.AddMinutes(59);
+                    fechaHasta = fechaHasta.AddSeconds(59);
+                    notasAsignatura = notasAsignatura.Where(t => t.Fecha >= fechaDesde && t.Fecha <= fechaHasta).ToList();
+
+                }
+
+                if (notasAsignatura.Count > 0)
+                {
+                    var asignaturaMostrar = new PromedioNotaAsignatura
+                    {
+                        AsignaturaId = asignatura.AsignaturaId,
+                        NombreAsignatura = asignatura.Descripcion,
+                        promedioAsignatura = decimal.Round(Convert.ToDecimal(notasAsignatura.Sum(n => n.Nota)) / notasAsignatura.Count, 2)
+                    };
+                    asignaturasMostrar.Add(asignaturaMostrar);
+                }
+
+                }
+                 asignaturasMostrar = asignaturasMostrar.OrderBy(a => a.NombreAsignatura).ToList();   
+
+               return asignaturasMostrar.ToList();          
+        }
+    } 
+
 }
+    
+
+
