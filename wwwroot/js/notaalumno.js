@@ -245,10 +245,57 @@ function EliminarNota(id) {
     .then(() => ObtenerNotas());
 }
 
-function HistorialNota(id) {
-    let IdHistorial = document.getElementById("IdHistorial").value;
-    let CampoModificado = document.getElementById("CampoModificado").value;
-    let ValorAnterior = document.getElementById("ValorAnterior").value;
-    let ValorNuevo = document.getElementById("ValorNuevo").value;
-    let FechaCambio = document.getElementById("fechaEditar").value;
+async function HistorialNota(id) {
+    try {
+
+        const respuesta = await fetch(`https://localhost:7177/Informes/historialnota/${id}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!respuesta.ok) {
+            throw new Error('Error al obtener el historial de la nota');
+        }
+
+        const historia = await respuesta.json();
+
+        const bodyNotasAlumnos = document.getElementById('Tbody-historial-notas');
+        bodyNotasAlumnos.innerHTML = '';
+
+        console.log(historia);
+console.log(typeof historia);
+
+        historia.forEach((notas) => {
+
+            const tr = document.createElement('tr');
+
+            tr.innerHTML = `
+                <td>${notas.fechaCambioString}</td>
+                <td>${notas.campoModificado}</td>
+                <td>${notas.valorAnterior}</td>
+                 <td>${notas.valorNuevo}</td>
+            `;
+
+            bodyNotasAlumnos.appendChild(tr);
+        });
+
+        const modalElement = document.getElementById('ModalHistorialNotaAlumno');
+
+        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+        modal.show();
+
+    }
+    catch (error) {
+
+        console.error('Error:', error);
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo obtener el historial de la nota'
+        });
+    }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _2026Alumnos.ClasesVistas;
-
+using ApiAlumnos2026.Models;
 
 namespace _2026Alumnos.Controllers
 {
@@ -24,17 +24,26 @@ namespace _2026Alumnos.Controllers
         [HttpPost("promedioalumnos")]
         public async Task<ActionResult<IEnumerable<PromedioNotaAlumno>>> PostAsignatura(FiltroNotaAlumno filtro)
         {
-            
             List<PromedioNotaAlumno> alumnosMostrar = new List<PromedioNotaAlumno>();
 
             var alumnos = await _context.Alumno.ToListAsync();
 
+            if (filtro.AlumnoID > 0)
+            {
+                alumnos = alumnos.Where(a => a.AlumnoId == filtro.AlumnoID).ToList();
+            }
+
             foreach (var alumno in alumnos)
             {
-                var notasAlumno = await _context.NotaAlumno.Where(a => a.AlumnoId == alumno.AlumnoId).ToListAsync();
+                var notasAlumno = await _context.NotaAlumno
+                    .Where(a => a.AlumnoId == alumno.AlumnoId)
+                    .ToListAsync();
+
                 if (filtro.AsignaturaID > 0)
                 {
-                    notasAlumno = notasAlumno.Where(a => a.AsignaturaId == filtro.AsignaturaID).ToList();
+                    notasAlumno = notasAlumno
+                        .Where(a => a.AsignaturaId == filtro.AsignaturaID)
+                        .ToList();
                 }
 
                 DateTime fechaDesde = new DateTime();
@@ -48,10 +57,11 @@ namespace _2026Alumnos.Controllers
                     fechaHasta = fechaHasta.AddHours(23);
                     fechaHasta = fechaHasta.AddMinutes(59);
                     fechaHasta = fechaHasta.AddSeconds(59);
-                    notasAlumno = notasAlumno.Where(t => t.Fecha >= fechaDesde && t.Fecha <= fechaHasta).ToList();
 
+                    notasAlumno = notasAlumno
+                        .Where(t => t.Fecha >= fechaDesde && t.Fecha <= fechaHasta)
+                        .ToList();
                 }
-
 
                 if (notasAlumno.Count > 0)
                 {
@@ -59,43 +69,49 @@ namespace _2026Alumnos.Controllers
                     {
                         NombreCompleto = alumno.NombreCompleto,
                         DNI = alumno.DNI,
-                        promedio = decimal.Round(Convert.ToDecimal(notasAlumno.Sum(n => n.Nota)) / notasAlumno.Count, 2)
+                        promedio = decimal.Round(
+                            Convert.ToDecimal(notasAlumno.Sum(n => n.Nota)) / notasAlumno.Count,
+                            2
+                        )
                     };
+
                     alumnosMostrar.Add(alumnoMostrar);
                 }
-
             }
 
             alumnosMostrar = alumnosMostrar.OrderBy(a => a.NombreCompleto).ToList();
 
-            return alumnosMostrar.ToList();            
+            return alumnosMostrar;
         }
 
-    
-
-    
-        [HttpPost("promedioasignaturas")]
-        public async Task<ActionResult<IEnumerable<PromedioNotaAsignatura>>> PostAsignaturaPromedio(FiltroNotaAsignatura filtro)
+        [HttpGet("promedioasignaturas")]
+        public async Task<ActionResult<IEnumerable<PromedioNotaAsignatura>>> GetAsignaturaPromedio(FiltroNotaAsignatura filtro)
         {
-            
             List<PromedioNotaAsignatura> asignaturasMostrar = new List<PromedioNotaAsignatura>();
 
             var asignaturas = await _context.Asignatura.ToListAsync();
 
-            foreach (var asignatura in asignaturas)  
+            foreach (var asignatura in asignaturas)
             {
-                var notasAsignatura = await _context.NotaAlumno.Where(n => n.AsignaturaId == asignatura.AsignaturaId).ToListAsync();
+                var notasAsignatura = await _context.NotaAlumno
+                    .Where(n => n.AsignaturaId == asignatura.AsignaturaId)
+                    .ToListAsync();
+
                 if (filtro.AsignaturaID > 0)
                 {
-                    notasAsignatura = notasAsignatura.Where(n => n.AsignaturaId == filtro.AsignaturaID).ToList();
-                }
-                
-                if (filtro.AlumnoID > 0)
-                {
-                    notasAsignatura = notasAsignatura.Where(n => n.AlumnoId == filtro.AlumnoID).ToList();
+                    notasAsignatura = notasAsignatura
+                        .Where(n => n.AsignaturaId == filtro.AsignaturaID)
+                        .ToList();
                 }
 
-                 DateTime fechaDesde = new DateTime();
+                if (filtro.AlumnoID > 0)
+                {
+                    notasAsignatura = notasAsignatura
+                        .Where(n => n.AlumnoId == filtro.AlumnoID)
+                        .ToList();
+                }
+
+                DateTime fechaDesde = new DateTime();
                 bool fechaDesdeValida = DateTime.TryParse(filtro.FechaDesde, out fechaDesde);
 
                 DateTime fechaHasta = new DateTime();
@@ -106,8 +122,10 @@ namespace _2026Alumnos.Controllers
                     fechaHasta = fechaHasta.AddHours(23);
                     fechaHasta = fechaHasta.AddMinutes(59);
                     fechaHasta = fechaHasta.AddSeconds(59);
-                    notasAsignatura = notasAsignatura.Where(t => t.Fecha >= fechaDesde && t.Fecha <= fechaHasta).ToList();
 
+                    notasAsignatura = notasAsignatura
+                        .Where(t => t.Fecha >= fechaDesde && t.Fecha <= fechaHasta)
+                        .ToList();
                 }
 
                 if (notasAsignatura.Count > 0)
@@ -116,19 +134,47 @@ namespace _2026Alumnos.Controllers
                     {
                         AsignaturaId = asignatura.AsignaturaId,
                         NombreAsignatura = asignatura.Descripcion,
-                        promedioAsignatura = decimal.Round(Convert.ToDecimal(notasAsignatura.Sum(n => n.Nota)) / notasAsignatura.Count, 2)
+                        promedioAsignatura = decimal.Round(
+                            Convert.ToDecimal(notasAsignatura.Sum(n => n.Nota)) / notasAsignatura.Count,
+                            2
+                        )
                     };
+
                     asignaturasMostrar.Add(asignaturaMostrar);
                 }
+            }
 
-                }
-                 asignaturasMostrar = asignaturasMostrar.OrderBy(a => a.NombreAsignatura).ToList();   
+            asignaturasMostrar = asignaturasMostrar
+                .OrderBy(a => a.NombreAsignatura)
+                .ToList();
 
-               return asignaturasMostrar.ToList();          
+            return asignaturasMostrar;
         }
-    } 
 
+        [HttpGet("historialnota/{id}")]
+        public async Task<ActionResult<IEnumerable<VistaHistorialNotaAlumno>>> GetHistorial(int id)
+        {
+            List<VistaHistorialNotaAlumno> asignaturaMostrar = new List<VistaHistorialNotaAlumno>();
+
+            var historiales = await _context.HistorialNotaAlumnos
+                .Where(a => a.NotaAlumnoID == id)
+                .OrderByDescending(a => a.FechaCambio)
+                .ToListAsync();
+
+            foreach (var historial in historiales)
+            {
+                var alumnoMostrar = new VistaHistorialNotaAlumno
+                {
+                    FechaCambioString = historial.FechaCambio.ToString("dd/MM/yyyy HH:mm"),
+                    CampoModificado = historial.CampoModificado,
+                    ValorAnterior = historial.ValorAnterior,
+                    ValorNuevo = historial.ValorNuevo
+                };
+
+                asignaturaMostrar.Add(alumnoMostrar);
+            }
+
+            return asignaturaMostrar;
+        }
+    }
 }
-    
-
-

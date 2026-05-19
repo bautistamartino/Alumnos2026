@@ -73,7 +73,6 @@ async function getPromedioAlumnos() {
     };
 
     console.log(filtros);
-    
 
     const res = await fetch('https://localhost:7177/Informes/PromedioAlumnos', {
         method: 'POST',
@@ -82,7 +81,7 @@ async function getPromedioAlumnos() {
         },
         body: JSON.stringify(filtros)
     });
-
+    
     const alumnos = await res.json();
 
     const tbody = document.querySelector("#tablaAlumnos tbody");

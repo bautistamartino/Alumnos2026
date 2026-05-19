@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace _2026Alumnos.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20260519130508_ModeloHistorial")]
+    partial class ModeloHistorial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,34 +49,6 @@ namespace _2026Alumnos.Migrations
                     b.HasKey("AlumnoId");
 
                     b.ToTable("Alumno");
-                });
-
-            modelBuilder.Entity("ApiAlumnos2026.Models.HistorialNotaAlumno", b =>
-                {
-                    b.Property<int>("HistorialNotaAlumnoID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HistorialNotaAlumnoID"));
-
-                    b.Property<string>("CampoModificado")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaCambio")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("NotaAlumnoID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ValorAnterior")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ValorNuevo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("HistorialNotaAlumnoID");
-
-                    b.ToTable("HistorialNotaAlumnos");
                 });
 
             modelBuilder.Entity("Asignatura", b =>
