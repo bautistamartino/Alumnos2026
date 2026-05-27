@@ -33,11 +33,11 @@
         <li class="nav-item">
           <a class="nav-link" href="NotaAlumno.html">Notas de alumnos</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="Resultados.html">Resultados</a>
-        </li>
+        </li> -->
         <li class="nav-item">
-          <a class="nav-link" href="Informe.html">Informe</a>
+          <a class="nav-link" href="Informe.html">Informe por alumno</a>
         </li>
          <li class="nav-item">
           <a class="nav-link active" href="InformeXasignatura.html">Informe por Asignatura</a>
@@ -63,6 +63,8 @@
             <th>Nombre</th>
             <th>Dni</th>
             <th>Sexo</th>
+            <th>Email</th>
+            <th></th>
             <th></th>
             <th></th>
         </tr>
@@ -100,6 +102,11 @@
             <option value="2">Femenino</option>
             <option value="3">Otro</option>
           </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" id="Email" class="form-control" placeholder="Ingrese el email del docente">
         </div>
 
         <p id="error" class="text-danger" hidden></p>
@@ -148,6 +155,11 @@
           </select>
         </div>
 
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email"  id="EmailEditar" class="form-control" disabled>
+        </div>
+
         <p id="erroreditar" class="text-danger" hidden></p>
 
       </div>
@@ -159,6 +171,40 @@
 
     </div>
   </div>
+</div>
+
+<!-- MODAL HISTORIAL -->
+<div class="modal fade" id="ModalHistorialDocente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 subtitulo-vista">
+                    HISTORIAL DE MODIFICACIONES DE DOCENTE
+                </h1>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <table class="table table-bordered table-hover">
+
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">Fecha edición</th>
+                            <th scope="col">Atributo</th>
+                            <th scope="col">Valor Anterior</th>
+                            <th scope="col">Valor Nuevo</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="Tbody-historial-docente"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Scripts -->

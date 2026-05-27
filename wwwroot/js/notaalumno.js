@@ -95,14 +95,15 @@ function CrearNota() {
         document.getElementById("AsignaturaId").classList.remove("is-invalid");
     }
     
-    if (nota < 1 || nota > 10) {
-        Swal.fire({
+if (!/^\d{1,2}$/.test(nota) || nota < 1 || nota > 10) {
+    Swal.fire({
         icon: 'error',
         title: 'Nota inválida',
         text: 'La nota debe estar entre 1 y 10'
     });
-        return;
-    }
+
+    return;
+}
 
      if (!fecha) {
         document.getElementById("fecha").classList.add("is-invalid");
@@ -263,9 +264,6 @@ async function HistorialNota(id) {
 
         const bodyNotasAlumnos = document.getElementById('Tbody-historial-notas');
         bodyNotasAlumnos.innerHTML = '';
-
-        console.log(historia);
-console.log(typeof historia);
 
         historia.forEach((notas) => {
 

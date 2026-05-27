@@ -33,11 +33,11 @@
         <li class="nav-item">
           <a class="nav-link" href="NotaAlumno.html">Notas de alumnos</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="Resultados.html">Resultados</a>
-        </li>
+        </li> -->
         <li class="nav-item">
-          <a class="nav-link" href="Informe.html">Informe</a>
+          <a class="nav-link" href="Informe.html">Informe por alumno</a>
         </li>
          <li class="nav-item">
           <a class="nav-link active" href="InformeXasignatura.html">Informe por Asignatura</a>
@@ -64,6 +64,8 @@
             <th>Dni</th>
             <th>Sexo</th>
             <th>Domicilio</th>
+            <th>Email</th>
+            <th></th>
             <th></th>
             <th></th>
         </tr>
@@ -107,6 +109,11 @@
         <div class="mb-3">
           <label class="form-label">Domicilio</label>
           <input type="text" id="Domicilio" class="form-control" placeholder="Ingrese domicilio">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" id="Email" class="form-control" placeholder="Ingrese email">
         </div>
 
         <p id="error" class="text-danger" hidden></p>
@@ -160,6 +167,11 @@
           <input type="text" id="DomicilioEditar" class="form-control">
         </div>
 
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" id="EmailEditar" disabled>
+        </div>
+
         <p id="erroreditar" class="text-danger" hidden></p>
 
       </div>
@@ -172,6 +184,41 @@
     </div>
   </div>
 </div>
+
+<!-- MODAL HISTORIAL -->
+<div class="modal fade" id="ModalHistorialAlumno" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 subtitulo-vista">
+                    HISTORIAL DE MODIFICACIONES DE ALUMNO
+                </h1>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <table class="table table-bordered table-hover">
+
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">Fecha edición</th>
+                            <th scope="col">Atributo</th>
+                            <th scope="col">Valor Anterior</th>
+                            <th scope="col">Valor Nuevo</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="Tbody-historial-alumno"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Scripts -->
  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiAlumnos2026.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using _2026Alumnos.ClasesVistas; 
+using _2026Alumnos.models; 
 
 namespace _2026Alumnos.Controllers
 {
@@ -24,7 +25,7 @@ namespace _2026Alumnos.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<NotaAlumno>>> GetNotaAlumno()
         {
-        return await _context.NotaAlumno
+        return await _context.NotaAlumnos
             .Include(n => n.Alumno)
             .Include(n => n.Asignatura)
             .ToListAsync();
@@ -34,10 +35,10 @@ namespace _2026Alumnos.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<NotaAlumno>> GetNotaAlumno(int id)
         {
-            var notaAlumno = await _context.NotaAlumno
+            var notaAlumno = await _context.NotaAlumnos
             .Include(n => n.Alumno)
             .Include(n => n.Asignatura)
-            .FirstOrDefaultAsync(n => n.NotaAlumnoId == id);
+            .FirstOrDefaultAsync(n => n.NotaAlumnoID == id);
 
             if (notaAlumno == null)
                 return NotFound();
@@ -51,7 +52,7 @@ namespace _2026Alumnos.Controllers
         public async Task<IActionResult> PutNotaAlumno(int id, NotaAlumno notaAlumno)
         {
 
-            if (id != notaAlumno.NotaAlumnoId)
+            if (id != notaAlumno.NotaAlumnoID)
             {
                 return BadRequest();
             }
@@ -60,7 +61,7 @@ namespace _2026Alumnos.Controllers
 
             try
             {
-                var notaAlumnoOriginal = _context.NotaAlumno.Include(n => n.Asignatura).Include(n => n.Alumno).Where(n => n.NotaAlumnoId == id).Single();
+                var notaAlumnoOriginal = _context.NotaAlumnos.Include(n => n.Asignatura).Include(n => n.Alumno).Where(n => n.NotaAlumnoID == id).Single();
             
                 if (notaAlumnoOriginal.Fecha != notaAlumno.Fecha)
                 {
@@ -75,9 +76,9 @@ namespace _2026Alumnos.Controllers
                       _context.HistorialNotaAlumnos.Add(cambioNota);
                 }
 
-                if (notaAlumnoOriginal.AlumnoId != notaAlumno.AlumnoId)
+                if (notaAlumnoOriginal.AlumnoID != notaAlumno.AlumnoID)
                 {
-                    var alumnoNuevo = _context.Alumno.Where(n => n.AlumnoId == notaAlumno.AlumnoId).Single();
+                    var alumnoNuevo = _context.Alumnos.Where(n => n.AlumnoId == notaAlumno.AlumnoID).Single();
                     var cambioNota = new HistorialNotaAlumno
                     {
                         NotaAlumnoID = id,
@@ -89,9 +90,9 @@ namespace _2026Alumnos.Controllers
                     _context.HistorialNotaAlumnos.Add(cambioNota);
                 }
 
-                if (notaAlumnoOriginal.AsignaturaId != notaAlumno.AsignaturaId)
+                if (notaAlumnoOriginal.AsignaturaID != notaAlumno.AsignaturaID)
                 {
-                    var asignaturaNueva = _context.Asignatura.Where(n => n.AsignaturaId == notaAlumno.AsignaturaId).Single();
+                    var asignaturaNueva = _context.Asignaturas.Where(n => n.AsignaturaId == notaAlumno.AsignaturaID).Single();
                     var cambioNota = new HistorialNotaAlumno
                     {
                         NotaAlumnoID = id,
@@ -116,11 +117,11 @@ namespace _2026Alumnos.Controllers
                 }
 
                 notaAlumnoOriginal.Fecha = notaAlumno.Fecha;
-                notaAlumnoOriginal.AlumnoId = notaAlumno.AlumnoId;
-                notaAlumnoOriginal.AsignaturaId = notaAlumno.AsignaturaId;
+                notaAlumnoOriginal.AlumnoID = notaAlumno.AlumnoID;
+                notaAlumnoOriginal.AsignaturaID = notaAlumno.AsignaturaID;
                 notaAlumnoOriginal.Nota = notaAlumno.Nota;
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); 
             }
                 catch (DbUpdateConcurrencyException)
             
@@ -143,23 +144,23 @@ namespace _2026Alumnos.Controllers
         [HttpPost]
         public async Task<ActionResult<NotaAlumno>> PostNotaAlumno(NotaAlumno notaAlumno)
         {
-            _context.NotaAlumno.Add(notaAlumno);
+            _context.NotaAlumnos.Add(notaAlumno);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetNotaAlumno", new { id = notaAlumno.NotaAlumnoId }, notaAlumno);
+            return CreatedAtAction("GetNotaAlumno", new { id = notaAlumno.NotaAlumnoID }, notaAlumno);
         }
 
         // DELETE: api/NotaAlumno/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNotaAlumno(int id)
         {
-            var notaAlumno = await _context.NotaAlumno.FindAsync(id);
+            var notaAlumno = await _context.NotaAlumnos.FindAsync(id);
             if (notaAlumno == null)
             {
                 return NotFound();
             }
 
-            _context.NotaAlumno.Remove(notaAlumno);
+            _context.NotaAlumnos.Remove(notaAlumno);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -167,7 +168,7 @@ namespace _2026Alumnos.Controllers
 
         private bool NotaAlumnoExists(int id)
         {
-            return _context.NotaAlumno.Any(e => e.NotaAlumnoId == id);
+            return _context.NotaAlumnos.Any(e => e.NotaAlumnoID == id);
         }
     }
 }

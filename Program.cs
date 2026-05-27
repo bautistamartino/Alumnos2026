@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using _2026Alumnos.models;
 
 var builder = WebApplication.CreateBuilder(args);
 

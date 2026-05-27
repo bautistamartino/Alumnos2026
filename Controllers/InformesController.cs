@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _2026Alumnos.ClasesVistas;
+using _2026Alumnos.models;
 using ApiAlumnos2026.Models;
+
 
 namespace _2026Alumnos.Controllers
 {
@@ -22,11 +24,11 @@ namespace _2026Alumnos.Controllers
         }
 
         [HttpPost("promedioalumnos")]
-        public async Task<ActionResult<IEnumerable<PromedioNotaAlumno>>> PostAsignatura(FiltroNotaAlumno filtro)
+        public async Task<ActionResult<IEnumerable<VistaPromedioAlumno>>> PostAsignatura(FiltroNotaAlumno filtro)
         {
-            List<PromedioNotaAlumno> alumnosMostrar = new List<PromedioNotaAlumno>();
+            List<VistaPromedioAlumno> alumnosMostrar = new List<VistaPromedioAlumno>();
 
-            var alumnos = await _context.Alumno.ToListAsync();
+            var alumnos = await _context.Alumnos.ToListAsync();
 
             if (filtro.AlumnoID > 0)
             {
@@ -35,14 +37,14 @@ namespace _2026Alumnos.Controllers
 
             foreach (var alumno in alumnos)
             {
-                var notasAlumno = await _context.NotaAlumno
-                    .Where(a => a.AlumnoId == alumno.AlumnoId)
+                var notasAlumno = await _context.NotaAlumnos
+                    .Where(a => a.AlumnoID == alumno.AlumnoId)
                     .ToListAsync();
 
                 if (filtro.AsignaturaID > 0)
                 {
                     notasAlumno = notasAlumno
-                        .Where(a => a.AsignaturaId == filtro.AsignaturaID)
+                        .Where(a => a.AsignaturaID == filtro.AsignaturaID)
                         .ToList();
                 }
 
@@ -65,11 +67,11 @@ namespace _2026Alumnos.Controllers
 
                 if (notasAlumno.Count > 0)
                 {
-                    var alumnoMostrar = new PromedioNotaAlumno
+                    var alumnoMostrar = new VistaPromedioAlumno
                     {
                         NombreCompleto = alumno.NombreCompleto,
                         DNI = alumno.DNI,
-                        promedio = decimal.Round(
+                        Promedio = decimal.Round(
                             Convert.ToDecimal(notasAlumno.Sum(n => n.Nota)) / notasAlumno.Count,
                             2
                         )
@@ -84,30 +86,30 @@ namespace _2026Alumnos.Controllers
             return alumnosMostrar;
         }
 
-        [HttpGet("promedioasignaturas")]
-        public async Task<ActionResult<IEnumerable<PromedioNotaAsignatura>>> GetAsignaturaPromedio(FiltroNotaAsignatura filtro)
+        [HttpPost("promedioasignaturas")]
+        public async Task<ActionResult<IEnumerable<VistaPromedioAsignatura>>> GetAsignaturaPromedio([FromBody] FiltroNotaAlumno filtro) 
         {
-            List<PromedioNotaAsignatura> asignaturasMostrar = new List<PromedioNotaAsignatura>();
+            List<VistaPromedioAsignatura> asignaturasMostrar = new List<VistaPromedioAsignatura>();
 
-            var asignaturas = await _context.Asignatura.ToListAsync();
+            var asignaturas = await _context.Asignaturas.ToListAsync();
 
             foreach (var asignatura in asignaturas)
             {
-                var notasAsignatura = await _context.NotaAlumno
-                    .Where(n => n.AsignaturaId == asignatura.AsignaturaId)
+                var notasAsignatura = await _context.NotaAlumnos
+                    .Where(n => n.AsignaturaID == asignatura.AsignaturaId)
                     .ToListAsync();
 
                 if (filtro.AsignaturaID > 0)
                 {
                     notasAsignatura = notasAsignatura
-                        .Where(n => n.AsignaturaId == filtro.AsignaturaID)
+                        .Where(n => n.AsignaturaID == filtro.AsignaturaID)
                         .ToList();
                 }
 
                 if (filtro.AlumnoID > 0)
                 {
                     notasAsignatura = notasAsignatura
-                        .Where(n => n.AlumnoId == filtro.AlumnoID)
+                        .Where(n => n.AlumnoID == filtro.AlumnoID)
                         .ToList();
                 }
 
@@ -130,11 +132,11 @@ namespace _2026Alumnos.Controllers
 
                 if (notasAsignatura.Count > 0)
                 {
-                    var asignaturaMostrar = new PromedioNotaAsignatura
+                    var asignaturaMostrar = new VistaPromedioAsignatura
                     {
-                        AsignaturaId = asignatura.AsignaturaId,
-                        NombreAsignatura = asignatura.Descripcion,
-                        promedioAsignatura = decimal.Round(
+                        AsignaturaID = asignatura.AsignaturaId,
+                        AsignaturaNombre = asignatura.Descripcion,
+                        Promedio = decimal.Round(
                             Convert.ToDecimal(notasAsignatura.Sum(n => n.Nota)) / notasAsignatura.Count,
                             2
                         )
@@ -145,7 +147,7 @@ namespace _2026Alumnos.Controllers
             }
 
             asignaturasMostrar = asignaturasMostrar
-                .OrderBy(a => a.NombreAsignatura)
+                .OrderBy(a => a.AsignaturaNombre)
                 .ToList();
 
             return asignaturasMostrar;
@@ -172,6 +174,58 @@ namespace _2026Alumnos.Controllers
                 };
 
                 asignaturaMostrar.Add(alumnoMostrar);
+            }
+
+            return asignaturaMostrar;
+        }
+        [HttpGet("historialalumno/{id}")]
+        public async Task<ActionResult<IEnumerable<VistaHistorialAlumno>>> GetHistorialAlumno(int id)
+        {
+            List<VistaHistorialAlumno> asignaturaMostrar = new List<VistaHistorialAlumno>();
+
+            var historiales = await _context.HistorialAlumnos
+                .Where(a => a.AlumnoID == id)
+                .OrderByDescending(a => a.FechaCambio)
+                .ToListAsync();
+
+            foreach (var historial in historiales)
+            {
+                var alumnoMostrar = new VistaHistorialAlumno
+                {
+                    FechaCambioString = historial.FechaCambio.ToString("dd/MM/yyyy HH:mm"),
+                    CampoModificado = historial.CampoModificado,
+                    ValorAnterior = historial.ValorAnterior,
+                    ValorNuevo = historial.ValorNuevo
+                };
+
+                asignaturaMostrar.Add(alumnoMostrar);
+            }
+
+            return asignaturaMostrar;
+        }
+
+
+        [HttpGet("historialdocente/{id}")]
+        public async Task<ActionResult<IEnumerable<VistaHistorialDocente>>> GetHistorialDocente(int id)
+        {
+            List<VistaHistorialDocente> asignaturaMostrar = new List<VistaHistorialDocente>();
+
+            var historiales = await _context.HistorialDocentes
+                .Where(a => a.DocenteID == id)
+                .OrderByDescending(a => a.FechaCambio)
+                .ToListAsync();
+
+            foreach (var historial in historiales)
+            {
+                var docenteMostrar = new VistaHistorialDocente
+                {
+                    FechaCambioString = historial.FechaCambio.ToString("dd/MM/yyyy HH:mm"),
+                    CampoModificado = historial.CampoModificado,
+                    ValorAnterior = historial.ValorAnterior,
+                    ValorNuevo = historial.ValorNuevo
+                };
+
+                asignaturaMostrar.Add(docenteMostrar);
             }
 
             return asignaturaMostrar;

@@ -12,8 +12,8 @@ using _2026Alumnos.models;
 namespace _2026Alumnos.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20260519170045_ModeloHistorialContext")]
-    partial class ModeloHistorialContext
+    [Migration("20260527210256_HistorialAlumnoYDocente")]
+    partial class HistorialAlumnoYDocente
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace _2026Alumnos.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Alumno", b =>
+            modelBuilder.Entity("_2026Alumnos.models.Alumno", b =>
                 {
                     b.Property<int>("AlumnoId")
                         .ValueGeneratedOnAdd()
@@ -37,11 +37,9 @@ namespace _2026Alumnos.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Domicilio")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NombreCompleto")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Sexo")
@@ -49,10 +47,51 @@ namespace _2026Alumnos.Migrations
 
                     b.HasKey("AlumnoId");
 
-                    b.ToTable("Alumno");
+                    b.ToTable("Alumnos");
                 });
 
-            modelBuilder.Entity("ApiAlumnos2026.Models.HistorialNotaAlumno", b =>
+            modelBuilder.Entity("_2026Alumnos.models.Asignatura", b =>
+                {
+                    b.Property<int>("AsignaturaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AsignaturaId"));
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Eliminado")
+                        .HasColumnType("bit");
+
+                    b.HasKey("AsignaturaId");
+
+                    b.ToTable("Asignaturas");
+                });
+
+            modelBuilder.Entity("_2026Alumnos.models.Docente", b =>
+                {
+                    b.Property<int>("DocenteId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocenteId"));
+
+                    b.Property<int>("DNI")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NombreCompleto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Sexo")
+                        .HasColumnType("int");
+
+                    b.HasKey("DocenteId");
+
+                    b.ToTable("Docentes");
+                });
+
+            modelBuilder.Entity("_2026Alumnos.models.HistorialNotaAlumno", b =>
                 {
                     b.Property<int>("HistorialNotaAlumnoID")
                         .ValueGeneratedOnAdd()
@@ -77,64 +116,21 @@ namespace _2026Alumnos.Migrations
 
                     b.HasKey("HistorialNotaAlumnoID");
 
-                    b.ToTable("HistorialNotaAlumnos");
+                    b.ToTable("HistorialNotaAlumno");
                 });
 
-            modelBuilder.Entity("Asignatura", b =>
+            modelBuilder.Entity("_2026Alumnos.models.NotaAlumno", b =>
                 {
-                    b.Property<int>("AsignaturaId")
+                    b.Property<int>("NotaAlumnoID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AsignaturaId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotaAlumnoID"));
 
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
-
-                    b.HasKey("AsignaturaId");
-
-                    b.ToTable("Asignatura");
-                });
-
-            modelBuilder.Entity("Docente", b =>
-                {
-                    b.Property<int>("DocenteId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("AlumnoID")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocenteId"));
-
-                    b.Property<int>("DNI")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NombreCompleto")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Sexo")
-                        .HasColumnType("int");
-
-                    b.HasKey("DocenteId");
-
-                    b.ToTable("Docente");
-                });
-
-            modelBuilder.Entity("NotaAlumno", b =>
-                {
-                    b.Property<int>("NotaAlumnoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotaAlumnoId"));
-
-                    b.Property<int>("AlumnoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AsignaturaId")
+                    b.Property<int>("AsignaturaID")
                         .HasColumnType("int");
 
                     b.Property<int?>("DocenteId")
@@ -146,32 +142,35 @@ namespace _2026Alumnos.Migrations
                     b.Property<int>("Nota")
                         .HasColumnType("int");
 
-                    b.HasKey("NotaAlumnoId");
+                    b.Property<int>("TipoInstancia")
+                        .HasColumnType("int");
 
-                    b.HasIndex("AlumnoId");
+                    b.HasKey("NotaAlumnoID");
 
-                    b.HasIndex("AsignaturaId");
+                    b.HasIndex("AlumnoID");
+
+                    b.HasIndex("AsignaturaID");
 
                     b.HasIndex("DocenteId");
 
-                    b.ToTable("NotaAlumno");
+                    b.ToTable("NotaAlumnos");
                 });
 
-            modelBuilder.Entity("NotaAlumno", b =>
+            modelBuilder.Entity("_2026Alumnos.models.NotaAlumno", b =>
                 {
-                    b.HasOne("Alumno", "Alumno")
+                    b.HasOne("_2026Alumnos.models.Alumno", "Alumno")
                         .WithMany("Notas")
-                        .HasForeignKey("AlumnoId")
+                        .HasForeignKey("AlumnoID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Asignatura", "Asignatura")
+                    b.HasOne("_2026Alumnos.models.Asignatura", "Asignatura")
                         .WithMany()
-                        .HasForeignKey("AsignaturaId")
+                        .HasForeignKey("AsignaturaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Docente", null)
+                    b.HasOne("_2026Alumnos.models.Docente", null)
                         .WithMany("NotaAlumnos")
                         .HasForeignKey("DocenteId");
 
@@ -180,12 +179,12 @@ namespace _2026Alumnos.Migrations
                     b.Navigation("Asignatura");
                 });
 
-            modelBuilder.Entity("Alumno", b =>
+            modelBuilder.Entity("_2026Alumnos.models.Alumno", b =>
                 {
                     b.Navigation("Notas");
                 });
 
-            modelBuilder.Entity("Docente", b =>
+            modelBuilder.Entity("_2026Alumnos.models.Docente", b =>
                 {
                     b.Navigation("NotaAlumnos");
                 });

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using _2026Alumnos.models; 
 
 namespace _2026Alumnos.Controllers
 {
@@ -12,7 +13,7 @@ namespace _2026Alumnos.Controllers
     [ApiController]
     public class AsignaturaController : ControllerBase
     {
-        private readonly Context _context;
+        private readonly Context _context; 
 
         public AsignaturaController(Context context)
         {
@@ -23,14 +24,14 @@ namespace _2026Alumnos.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Asignatura>>> GetAsignatura()
         {
-            return await _context.Asignatura.ToListAsync();
+            return await _context.Asignaturas.ToListAsync();
         }
 
         // GET: api/Asignatura/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Asignatura>> GetAsignatura(int id)
         {
-            var asignatura = await _context.Asignatura.FindAsync(id);
+            var asignatura = await _context.Asignaturas.FindAsync(id);
 
             if (asignatura == null)
             {
@@ -76,7 +77,7 @@ namespace _2026Alumnos.Controllers
         [HttpPost]
         public async Task<ActionResult<Asignatura>> PostAsignatura(Asignatura asignatura)
         {
-            _context.Asignatura.Add(asignatura);
+            _context.Asignaturas.Add(asignatura);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAsignatura", new { id = asignatura.AsignaturaId }, asignatura);
@@ -86,13 +87,13 @@ namespace _2026Alumnos.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsignatura(int id)
         {
-            var asignatura = await _context.Asignatura.FindAsync(id);
+            var asignatura = await _context.Asignaturas.FindAsync(id);
             if (asignatura == null)
             {
                 return NotFound();
             }
 
-            _context.Asignatura.Remove(asignatura);
+            _context.Asignaturas.Remove(asignatura);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -100,7 +101,7 @@ namespace _2026Alumnos.Controllers
 
         private bool AsignaturaExists(int id)
         {
-            return _context.Asignatura.Any(e => e.AsignaturaId == id);
+            return _context.Asignaturas.Any(e => e.AsignaturaId == id);
         }
     }
 }

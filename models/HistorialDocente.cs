@@ -1,28 +1,25 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace _2026Alumnos.models
+namespace ApiAlumnos2026.Models
 {
-    public class HistorialNotaAlumno
+public class HistorialDocente
     {
         [Key]
-        public int HistorialNotaAlumnoID { get; set; }
-        public int NotaAlumnoID { get; set; }
+        public int DocenteHistorialID { get; set; }
+        public int DocenteID { get; set; }
         public DateTime FechaCambio { get; set; }
         public string? CampoModificado { get; set; }
         public string? ValorAnterior { get; set; }
         public string? ValorNuevo { get; set; }
-    }
-
-
-  public class VistaHistorialNotaAlumno
+    } 
+    
+  public class VistaHistorialDocente
     {
-        public int HistorialNotaAlumnoID { get; set; }
-        public int NotaAlumnoID { get; set; }
+        public int HistorialDocenteID { get; set; }
+        public int DocenteID { get; set; }
         public string? FechaCambioString { get; set; }
         public string? CampoModificado { get; set; }
         public string? ValorAnterior { get; set; }
         public string? ValorNuevo { get; set; }
-    }
-
-    
+    }   
 }

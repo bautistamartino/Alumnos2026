@@ -27,8 +27,10 @@ function MostrarDocente(data) {
                 "<td>" + docente.nombreCompleto + "</td>" +
                 "<td>" + docente.dni + "</td>" +
                 "<td>" + sexoTexto + "</td>" +
+                "<td>" + docente.email + "</td>" +
                 "<td><button class='btn btn-info' onclick='BuscarDocenteId(" + docente.docenteId + ")'>Editar</button></td>" +
                 "<td><button class='btn btn-danger' onclick='EliminarDocente(" + docente.docenteId + ")'>Eliminar</button></td>" +
+                "<td><button class='btn btn-warning' onclick='HistorialDocente(" + docente.docenteId + ")'>Historial</button></td>" +
             "</tr>"
         );
     });
@@ -44,6 +46,7 @@ function CrearDocente() {
     let nombre = document.getElementById("Nombre").value.trim();
     let dni = document.getElementById("Dni").value;
     let sexo = document.getElementById("Sexo").value;
+    let email = document.getElementById("Email").value.trim();
 
      // VALIDAR NOMBRE
     if (nombre === "") {
@@ -90,8 +93,9 @@ function CrearDocente() {
 
     let docente = {
         nombreCompleto: nombre,
-        dni: parseInt(dni),
+        dni: dni,
         sexo: parseInt(sexo),
+        email: document.getElementById("Email").value.trim()
     };
 
     fetch('https://localhost:7177/Docente', {
@@ -114,6 +118,7 @@ function CrearDocente() {
         document.getElementById("Nombre").value = "";
         document.getElementById("Dni").value = "";
         document.getElementById("Sexo").value = "";
+        document.getElementById("Email").value = "";
 
         ObtenerDocentes();
     })
@@ -148,12 +153,15 @@ function BuscarDocenteId(id) {
     document.getElementById("NombreEditar").value = data.nombreCompleto;
     document.getElementById("DniEditar").value = data.dni;
     document.getElementById("SexoEditar").value = data.sexo;
+    document.getElementById("EmailEditar").value = data.email;
 
     var modal = new bootstrap.Modal(document.getElementById('ModalEditarDocente'));
     modal.show();
 })
     .catch(error => console.error("Error al buscar docente:", error));
 }
+
+        
 
 function EditarDocente() {
 
@@ -180,25 +188,107 @@ function EditarDocente() {
     let docente = {
         docenteId: document.getElementById("IdDocenteEditar").value,
         nombreCompleto: nombre,
-        dni: parseInt(dni),
+        dni: dni,
         sexo: parseInt(sexo),
+        
     };
+
+    
 
     fetch(`https://localhost:7177/Docente/${docente.docenteId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(docente)
     })
-    .then(response => {
+    .then(async response => {
         if (!response.ok && response.status !== 204) {
-            throw new Error("Error al editar");
+            let errorMessage = 'Error al editar';
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData?.mensaje || errorData?.title || JSON.stringify(errorData);
+            } catch {
+                errorMessage = `Error al editar (código ${response.status})`;
+            }
+            throw new Error(errorMessage);
         }
 
         bootstrap.Modal.getInstance(document.getElementById('ModalEditarDocente')).hide();
 
         ObtenerDocentes();
     })
-    .catch(error => console.error(error));
+    .catch(error => {
+        console.error(error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al editar docente',
+            text: error.message
+        });
+    });
 }
 
 
+async function HistorialDocente(id) {
+    try {
+        const respuesta = await fetch(`https://localhost:7177/Informes/historialdocente/${id}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!respuesta.ok) {
+            throw new Error('Error al obtener el historial del docente');
+        }
+
+        const historia = await respuesta.json();
+
+        const bodyDocentes = document.getElementById('Tbody-historial-docente');
+        bodyDocentes.innerHTML = '' ;
+
+
+        historia.forEach((notas) => {
+
+            const tr = document.createElement('tr');
+
+            tr.innerHTML = `
+                <td>${notas.fechaCambioString}</td>
+                <td>${notas.campoModificado}</td>
+                <td>${notas.valorAnterior}</td>
+                <td>${notas.valorNuevo}</td>
+            `;
+
+            bodyDocentes.appendChild(tr);
+        });
+
+        const modalElement = document.getElementById('ModalHistorialDocente');
+
+        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+        modal.show();
+
+    }
+    catch (error) {
+
+        console.error('Error:', error);
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo obtener el historial del docente'
+        });
+    }
+}
+
+// Limpiar modal de agregar docente cuando se cierra
+    document.getElementById('ModalAgregarDocente').addEventListener('hidden.bs.modal', function() {
+    document.getElementById("Nombre").value = "";
+    document.getElementById("Dni").value = "";
+    document.getElementById("Sexo").value = "";
+    document.getElementById("Email").value = "";
+    
+    // Remover clases de validación
+    document.getElementById("Nombre").classList.remove("is-invalid");
+    document.getElementById("Dni").classList.remove("is-invalid");
+    document.getElementById("Sexo").classList.remove("is-invalid");
+    document.getElementById("Email").classList.remove("is-invalid");
+});

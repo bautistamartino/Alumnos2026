@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using _2026Alumnos.models;
+using ApiAlumnos2026.Models;
+
+
 
 namespace _2026Alumnos.Controllers
 {
@@ -23,14 +27,14 @@ namespace _2026Alumnos.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Alumno>>> GetAlumno()
         {
-            return await _context.Alumno.ToListAsync();
+            return await _context.Alumnos.ToListAsync();
         }
 
         // GET: api/Alumno/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Alumno>> GetAlumno(int id)
         {
-            var alumno = await _context.Alumno.FindAsync(id);
+            var alumno = await _context.Alumnos.FindAsync(id);
 
             if (alumno == null)
             {
@@ -45,15 +49,92 @@ namespace _2026Alumnos.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAlumno(int id, Alumno alumno)
         {
+
+            // NORMALIZAR
+            alumno.NombreCompleto = alumno.NombreCompleto?.Trim().ToUpper();
+            alumno.Domicilio = alumno.Domicilio?.Trim().ToUpper();
+            alumno.DNI = alumno.DNI?.Trim();
+
+            
+            var existe = await _context.Alumnos
+                .AnyAsync(t => t.DNI == alumno.DNI && t.AlumnoId != id);
+
+            if (existe)
+            {
+                return Conflict(new { mensaje = "Ya existe un alumno con ese DNI." });
+            }
+
             if (id != alumno.AlumnoId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(alumno).State = EntityState.Modified;
-
             try
             {
+                var AlumnoOriginal = await _context.Alumnos.FindAsync(id);
+                if (AlumnoOriginal == null)
+                {
+                    return NotFound();
+                }
+
+                if (AlumnoOriginal.NombreCompleto != alumno.NombreCompleto)
+                {
+                    var cambioAlumno = new HistorialAlumno
+                    {
+                        AlumnoID = id,
+                        FechaCambio = DateTime.Now,
+                        CampoModificado = "NOMBRE",
+                        ValorAnterior = AlumnoOriginal.NombreCompleto,
+                        ValorNuevo = alumno.NombreCompleto
+                    };
+                    _context.HistorialAlumnos.Add(cambioAlumno);
+                }
+
+
+                if (AlumnoOriginal.DNI != alumno.DNI){
+                    var cambioAlumno = new HistorialAlumno
+                    {
+                        AlumnoID = id,
+                        FechaCambio = DateTime.Now,
+                        CampoModificado = "DNI",
+                        ValorAnterior = AlumnoOriginal.DNI,
+                        ValorNuevo = alumno.DNI
+                    };
+                    _context.HistorialAlumnos.Add(cambioAlumno);
+                }
+
+                if (AlumnoOriginal.Sexo != alumno.Sexo)
+                {
+                    var cambioAlumno = new HistorialAlumno
+                    {
+                        AlumnoID = id,
+                        FechaCambio = DateTime.Now,
+                        CampoModificado = "SEXO",
+                        ValorAnterior = AlumnoOriginal.Sexo.ToString(),
+                        ValorNuevo = alumno.Sexo.ToString()
+                    };
+                    _context.HistorialAlumnos.Add(cambioAlumno);
+                }
+                
+                if (AlumnoOriginal.Domicilio != alumno.Domicilio)
+                {
+                    var cambioAlumno = new HistorialAlumno
+                    {
+                        AlumnoID = id,
+                        FechaCambio = DateTime.Now,
+                        CampoModificado = "DOMICILIO",
+                        ValorAnterior = AlumnoOriginal.Domicilio,
+                        ValorNuevo = alumno.Domicilio
+                    };
+                    _context.HistorialAlumnos.Add(cambioAlumno);
+                }
+
+                
+                AlumnoOriginal.NombreCompleto = alumno.NombreCompleto;
+                AlumnoOriginal.DNI = alumno.DNI;
+                AlumnoOriginal.Sexo = alumno.Sexo;
+                AlumnoOriginal.Domicilio = alumno.Domicilio;
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -66,6 +147,10 @@ namespace _2026Alumnos.Controllers
                 {
                     throw;
                 }
+            }
+            catch (DbUpdateException dbEx)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = "Error al guardar los cambios del alumno.", detalle = dbEx.Message });
             }
 
             return NoContent();
@@ -98,7 +183,7 @@ namespace _2026Alumnos.Controllers
             }
 
             // VALIDAR DUPLICADO
-            var existe = await _context.Alumno
+            var existe = await _context.Alumnos
                 .AnyAsync(t => t.DNI == alumno.DNI);
 
             if (existe)
@@ -106,7 +191,7 @@ namespace _2026Alumnos.Controllers
                 return Conflict(new { mensaje = "Ya existe un alumno con ese DNI." });
             }
 
-            _context.Alumno.Add(alumno);
+            _context.Alumnos.Add(alumno);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAlumno", new { id = alumno.AlumnoId }, alumno);
@@ -116,13 +201,13 @@ namespace _2026Alumnos.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAlumno(int id)
         {
-            var alumno = await _context.Alumno.FindAsync(id);
+            var alumno = await _context.Alumnos.FindAsync(id);
             if (alumno == null)
             {
                 return NotFound();
             }
 
-            _context.Alumno.Remove(alumno);
+            _context.Alumnos.Remove(alumno);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -130,7 +215,7 @@ namespace _2026Alumnos.Controllers
 
         private bool AlumnoExists(int id)
         {
-            return _context.Alumno.Any(e => e.AlumnoId == id);
+            return _context.Alumnos.Any(e => e.AlumnoId == id);
         }
     }
 }

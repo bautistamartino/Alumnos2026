@@ -1,8 +1,11 @@
-public class Asignatura
+namespace _2026Alumnos.models
 {
-    public int AsignaturaId { get; set; } 
+        public class Asignatura
+    {
+         public int AsignaturaId { get; set; } 
 
-    public string Descripcion { get; set; } = null!;
+        public string? Descripcion { get; set; } = null!;
 
-    public bool Eliminado { get; set; }
+        public bool Eliminado { get; set; }
+    }
 }

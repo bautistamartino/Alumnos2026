@@ -6,7 +6,7 @@ using ClasesVistas;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using _2026Alumnos.ClasesVistas;
+using _2026Alumnos.models;
 
 namespace Alumnos2026.Controllers
 {
@@ -31,11 +31,11 @@ namespace Alumnos2026.Controllers
 
             
                 // Promedio
-                var cantidadNotas = _context.NotaAlumno.Count();
+                var cantidadNotas = _context.NotaAlumnos.Count();
 
                 if (cantidadNotas > 0)
             {
-                var sumaNotas = _context.NotaAlumno.Sum(a => a.Nota);
+                var sumaNotas = _context.NotaAlumnos.Sum(a => a.Nota);
                 resultado.Promedio = Decimal.Round((decimal)sumaNotas / cantidadNotas, 2);
             }
                 else
@@ -44,14 +44,14 @@ namespace Alumnos2026.Controllers
             }
 
                 // Nota mas alta y alumno con nota mas alta
-                resultado.NotaMasAlta = _context.NotaAlumno.Max(a => a.Nota);
+                resultado.NotaMasAlta = _context.NotaAlumnos.Max(a => a.Nota);
                 
                 // Nota mas baja y alumno con nota mas baja
-                resultado.NotaMasBaja =  _context.NotaAlumno.Min(a => a.Nota);
+                resultado.NotaMasBaja =  _context.NotaAlumnos.Min(a => a.Nota);
                
                 // Cantidad de aprobados y desaprobados
-                resultado.CantidadAprobados = _context.NotaAlumno.Where(a => a.Nota >= 6).Count();
-                resultado.CantidadDesaprobados = _context.NotaAlumno.Where(a => a.Nota < 6).Count();
+                resultado.CantidadAprobados = _context.NotaAlumnos.Where(a => a.Nota >= 6).Count();
+                resultado.CantidadDesaprobados = _context.NotaAlumnos.Where(a => a.Nota < 6).Count();
 
                 if(resultado.Promedio >= 6){
                     resultado.EstadoDelGrupo = "Grupo Aprobado";
@@ -62,12 +62,12 @@ namespace Alumnos2026.Controllers
                 }
 
                 
-                var alumnoMax = _context.NotaAlumno
+                var alumnoMax = _context.NotaAlumnos
                 .Include(a => a.Alumno)
                 .OrderByDescending(a => a.Nota)
                 .FirstOrDefault();
 
-                var alumnoMin = _context.NotaAlumno
+                var alumnoMin = _context.NotaAlumnos
                 .Include(a => a.Alumno)
                 .OrderBy(a => a.Nota)
                 .FirstOrDefault();

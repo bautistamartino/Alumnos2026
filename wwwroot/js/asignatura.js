@@ -127,6 +127,13 @@ function EditarAsignatura() {
 }
 
 
+// Limpiar modal de agregar asignatura cuando se cierra
+    document.getElementById('ModalAgregarAsignatura').addEventListener('hidden.bs.modal', function() {
+    document.getElementById("Descripcion").value = "";
+    
+    // Remover clases de validación
+    document.getElementById("Descripcion").classList.remove("is-invalid");
 
+});
 
 

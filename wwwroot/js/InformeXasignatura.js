@@ -99,34 +99,37 @@ async function getPromedioasignaturas() {
     const filtros = {
         fechaDesde: FechaDesde,
         fechaHasta: FechaHasta,
-        asignaturaID: parseInt(document.getElementById("selectAsignatura").value),
-        alumnoID: parseInt(document.getElementById("selectAlumno").value)
+        asignaturaID: parseInt(document.getElementById("selectAsignatura").value) || 0,
+        alumnoID: parseInt(document.getElementById("selectAlumno").value) || 0
     };
 
 
     const res = await fetch('https://localhost:7177/Informes/promedioasignaturas', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(filtros)
-    });
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(filtros)
+});
 
-    const PromedioNotaAsignatura = await res.json();
+const asignaturas = await res.json();
 
-    const tbody = document.querySelector("#tablaasignatura tbody");
-    tbody.innerHTML = "";
+const tbody = document.querySelector("#tablaasignatura tbody");
+tbody.innerHTML = "";
 
-    PromedioNotaAsignatura.forEach((PromedioNotaAsignatura) => {
-        const row = document.createElement("tr");
+asignaturas.forEach((asignatura) => {
 
-        row.innerHTML = `
-            <td>${PromedioNotaAsignatura.nombreAsignatura}</td>
-            <td class="text-center">${PromedioNotaAsignatura.promedioAsignatura.toFixed(2)}</td>
-        `;
+    const row = document.createElement("tr");
 
-        tbody.appendChild(row);
-    });
+    row.innerHTML = `
+        <td>${asignatura.asignaturaNombre}</td>
+        <td class="text-center">
+            ${Number(asignatura.promedio || 0).toFixed(2)}
+        </td>
+    `;
+
+    tbody.appendChild(row);
+});
 }
 
 ObtenerAsignaturas();

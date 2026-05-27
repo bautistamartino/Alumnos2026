@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+namespace _2026Alumnos.models;
+
 using ApiAlumnos2026.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,12 +14,14 @@ using Microsoft.EntityFrameworkCore;
         {
         }
 
-        public DbSet<Alumno> Alumno { get; set; } = default!;
+        public DbSet<Alumno> Alumnos { get; set; } = default!;
 
-public DbSet<NotaAlumno> NotaAlumno { get; set; } = default!;
+public DbSet<NotaAlumno> NotaAlumnos { get; set; } = default!;
 
-public DbSet<Asignatura> Asignatura { get; set; } = default!;
+public DbSet<Asignatura> Asignaturas { get; set; } = default!;
 
-public DbSet<Docente> Docente { get; set; } = default!;
+public DbSet<Docente> Docentes { get; set; } = default!;
 public DbSet<HistorialNotaAlumno> HistorialNotaAlumnos { get; set; } = default!;
+public DbSet<HistorialAlumno> HistorialAlumnos { get; set; } = default!;
+public DbSet<HistorialDocente> HistorialDocentes { get; set; } = default!;
     }
