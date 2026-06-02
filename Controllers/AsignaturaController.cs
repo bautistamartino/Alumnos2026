@@ -46,6 +46,10 @@ namespace _2026Alumnos.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAsignatura(int id, Asignatura asignatura)
         {
+
+            
+            asignatura.Descripcion = asignatura.Descripcion?.Trim().ToUpper();
+            
             if (id != asignatura.AsignaturaId)
             {
                 return BadRequest();
@@ -77,6 +81,7 @@ namespace _2026Alumnos.Controllers
         [HttpPost]
         public async Task<ActionResult<Asignatura>> PostAsignatura(Asignatura asignatura)
         {
+            asignatura.Descripcion = asignatura.Descripcion?.Trim().ToUpper();
             _context.Asignaturas.Add(asignatura);
             await _context.SaveChangesAsync();
 
