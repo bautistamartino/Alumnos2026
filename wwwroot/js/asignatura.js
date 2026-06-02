@@ -1,139 +1,242 @@
+let modoEdicionAsignatura = false;
+
+ObtenerAsignaturas();
+
 function ObtenerAsignaturas() {
-fetch('https://localhost:7177/Asignatura')
-.then(response => response.json())
-.then(data => MostrarAsignatura(data))
-.catch(error => console.error('Error: No se puede acceder al servicio', error));
+
+    fetch('https://localhost:7177/Asignatura')
+    .then(response => {
+
+        if (!response.ok)
+            throw new Error("Error en la API");
+
+        return response.json();
+    })
+    .then(data => MostrarAsignatura(data))
+    .catch(error => console.error(error));
 }
 
 function MostrarAsignatura(data) {
+
     $("#TodosLasAsignaturas").empty();
 
     $.each(data, function (index, asignatura) {
+
         $("#TodosLasAsignaturas").append(
+
             "<tr>" +
+
                 "<td>" + asignatura.asignaturaId + "</td>" +
                 "<td>" + asignatura.descripcion + "</td>" +
                 "<td>" + (asignatura.eliminado ? "Sí" : "No") + "</td>" +
-                "<td><button class='btn btn-info' onclick='BuscarAsignaturaId(" + asignatura.asignaturaId + ")'>Editar</button></td>" +
-                "<td><button class='btn btn-danger' onclick='EliminarAsignatura(" + asignatura.asignaturaId + ")'>Eliminar</button></td>" +
+
+                "<td>" +
+                    "<button class='btn btn-info' onclick='BuscarAsignaturaId(" + asignatura.asignaturaId + ")'>" +
+                        "Editar" +
+                    "</button>" +
+                "</td>" +
+
+                "<td>" +
+                    "<button class='btn btn-danger' onclick='EliminarAsignatura(" + asignatura.asignaturaId + ")'>" +
+                        "Eliminar" +
+                    "</button>" +
+                "</td>" +
+
             "</tr>"
         );
     });
 }
 
-function CrearAsignatura() {
+// ABRIR MODAL CREAR
+function AbrirModalCrearAsignatura() {
 
-    let descripcion = document.getElementById("Descripcion").value.trim();
+    modoEdicionAsignatura = false;
 
-    let asignatura = {
-        descripcion: descripcion,
-        eliminado: document.getElementById("Eliminado").checked
-    };
+    document.getElementById("TituloModalAsignatura").innerText =
+        "Crear Asignatura";
 
+    LimpiarModalAsignatura();
+
+    const modal = new bootstrap.Modal(
+        document.getElementById('ModalAsignatura')
+    );
+
+    modal.show();
+}
+
+// BUSCAR ASIGNATURA
+function BuscarAsignaturaId(id) {
+
+    fetch(`https://localhost:7177/Asignatura/${id}`)
+    .then(response => {
+
+        if (!response.ok)
+            throw new Error("Error al buscar asignatura");
+
+        return response.json();
+    })
+    .then(data => {
+
+        modoEdicionAsignatura = true;
+
+        document.getElementById("TituloModalAsignatura").innerText =
+            "Editar Asignatura";
+
+        document.getElementById("AsignaturaId").value =
+            data.asignaturaId;
+
+        document.getElementById("Descripcion").value =
+            data.descripcion;
+
+        document.getElementById("Eliminado").checked =
+            data.eliminado;
+
+        const modal = new bootstrap.Modal(
+            document.getElementById('ModalAsignatura')
+        );
+
+        modal.show();
+    })
+    .catch(error => console.error(error));
+}
+
+// CREAR Y EDITAR
+async function GuardarAsignatura() {
+
+    let id = document.getElementById("AsignaturaId").value;
+
+    let descripcion =
+        document.getElementById("Descripcion").value.trim();
+
+    let eliminado =
+        document.getElementById("Eliminado").checked;
+
+    // VALIDAR
     if (descripcion === "") {
-        document.getElementById("Descripcion").classList.add("is-invalid");
+
+        document.getElementById("Descripcion")
+        .classList.add("is-invalid");
 
         Swal.fire({
             icon: 'warning',
             title: 'Campo obligatorio',
             text: 'La descripción es obligatoria'
         });
+
         return;
-    } else {
-        document.getElementById("Descripcion").classList.remove("is-invalid");
+    }
+    else {
+
+        document.getElementById("Descripcion")
+        .classList.remove("is-invalid");
     }
 
-    fetch('https://localhost:7177/Asignatura', {
-        method: 'POST',
-        headers: {'Content-Type' : 'application/json'},
+    let asignatura = {
+
+        asignaturaId: id || 0,
+        descripcion: descripcion,
+        eliminado: eliminado
+    };
+
+    let url = 'https://localhost:7177/Asignatura';
+    let method = 'POST';
+
+    if (modoEdicionAsignatura) {
+
+        url += `/${id}`;
+        method = 'PUT';
+    }
+
+    fetch(url, {
+
+        method: method,
+
+        headers: {
+            'Content-Type': 'application/json'
+        },
+
         body: JSON.stringify(asignatura)
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("Error en el servidor");
-        return response.json();
-    })
-    .then(() => {
-        var modal = bootstrap.Modal.getInstance(document.getElementById('ModalAgregarAsignatura'));
-        modal.hide();
 
-        document.getElementById("Descripcion").value = "";
-        document.getElementById("Eliminado").checked = false;
-
-        ObtenerAsignaturas(); 
     })
-    .catch(error => console.log("Error al guardar asignatura:", error));
+    .then(async response => {
+
+        if (!response.ok && response.status !== 204) {
+
+            let errorMessage = "Error al guardar";
+
+            try {
+
+                const errorData = await response.json();
+
+                errorMessage =
+                    errorData.mensaje ||
+                    errorData.title ||
+                    errorMessage;
+            }
+            catch { }
+
+            throw new Error(errorMessage);
+        }
+
+        bootstrap.Modal
+        .getInstance(document.getElementById('ModalAsignatura'))
+        .hide();
+
+        ObtenerAsignaturas();
+
+        LimpiarModalAsignatura();
+    })
+    .catch(error => {
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message
+        });
+
+    });
 }
 
+// ELIMINAR
 function EliminarAsignatura(id) {
-    if (!confirm("¿Seguro que desea eliminar esta asignatura?")) return;
+
+    if (!confirm("¿Seguro que desea eliminar esta asignatura?"))
+        return;
 
     fetch(`https://localhost:7177/Asignatura/${id}`, {
+
         method: 'DELETE'
     })
     .then(response => {
-        if (!response.ok) throw new Error("Error al eliminar");
-        return; // NO json()
+
+        if (!response.ok)
+            throw new Error("Error al eliminar");
+
     })
     .then(() => {
-        ObtenerAsignaturas(); 
-    })
-    .catch(error => console.error("Error al eliminar:", error));
-}
-
-function BuscarAsignaturaId(id) {
-    fetch(`https://localhost:7177/Asignatura/${id}`)
-    .then(response => {
-        if (!response.ok) throw new Error("Error al buscar asignatura");
-        return response.json();
-    })
-    .then(data => {
-        document.getElementById("IdAsignaturaEditar").value = data.asignaturaId;
-        document.getElementById("DescripcionEditar").value = data.descripcion;
-        document.getElementById("EliminadoEditar").checked = data.eliminado;
-
-        var modal = new bootstrap.Modal(document.getElementById('ModalEditarAsignatura'));
-        modal.show();
-    })
-    .catch(error => console.error("Error al buscar asignatura:", error));
-}
-
-function EditarAsignatura() {
-    let asignatura = {
-        asignaturaId: document.getElementById("IdAsignaturaEditar").value,
-        descripcion: document.getElementById("DescripcionEditar").value,
-        eliminado: document.getElementById("EliminadoEditar").checked
-    };
-
-    fetch(`https://localhost:7177/Asignatura/${asignatura.asignaturaId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(asignatura)
-    })
-    .then(response => {
-        if (!response.ok && response.status !== 204) {
-            throw new Error("Error al editar la asignatura");
-        }
-
-        document.getElementById("IdAsignaturaEditar").value = "";
-        document.getElementById("DescripcionEditar").value = "";
-        document.getElementById("EliminadoEditar").checked = false;
-
-        var modal = bootstrap.Modal.getInstance(document.getElementById('ModalEditarAsignatura'));
-        modal.hide();
 
         ObtenerAsignaturas();
     })
-    .catch(error => console.log("Error al editar:", error));
+    .catch(error => console.error(error));
 }
 
+// LIMPIAR MODAL
+function LimpiarModalAsignatura() {
 
-// Limpiar modal de agregar asignatura cuando se cierra
-    document.getElementById('ModalAgregarAsignatura').addEventListener('hidden.bs.modal', function() {
+    document.getElementById("AsignaturaId").value = "";
+
     document.getElementById("Descripcion").value = "";
-    
-    // Remover clases de validación
-    document.getElementById("Descripcion").classList.remove("is-invalid");
+
+    document.getElementById("Eliminado").checked = false;
+
+    document.getElementById("Descripcion")
+    .classList.remove("is-invalid");
+}
+
+// LIMPIAR AL CERRAR
+document.getElementById('ModalAsignatura')
+.addEventListener('hidden.bs.modal', function () {
+
+    LimpiarModalAsignatura();
 
 });
-
-

@@ -1,299 +1,451 @@
+let modoEdicionNota = false;
+
+ObtenerNotas();
+CargarAlumnos();
+CargarAsignaturas();
+
+// OBTENER NOTAS
 function ObtenerNotas() {
+
     fetch('https://localhost:7177/NotaAlumno')
-    .then(r => r.json())
+    .then(response => {
+
+        if (!response.ok)
+            throw new Error("Error en la API");
+
+        return response.json();
+    })
     .then(data => MostrarNotas(data))
-    .catch(e => console.error(e));
+    .catch(error => console.error(error));
 }
 
+// MOSTRAR NOTAS
 function MostrarNotas(data) {
+
+    console.log(data);
+
     $("#TablaNotas").empty();
 
     data.forEach(n => {
+
         $("#TablaNotas").append(`
+
             <tr>
-                <td>${n.notaAlumnoId}</td>
-                <td>${n.alumno?.nombreCompleto ?? n.alumnoId}</td>
-                <td>${n.asignatura?.descripcion ?? n.asignaturaId}</td>
+
+                <td>${n.notaAlumnoID}</td>
+
+                <td>${n.alumno?.nombreCompleto ?? n.alumnoID}</td>
+
+                <td>${n.asignatura?.descripcion ?? n.asignaturaID}</td>
+
                 <td>${n.nota}</td>
-                <td>${new Date(n.fecha).toLocaleDateString('es-AR')}</td>
-                <td><button class="btn btn-info" onclick="BuscarNota(${n.notaAlumnoId})">Editar</button></td>
-                <td><button class="btn btn-danger" onclick="EliminarNota(${n.notaAlumnoId})">Eliminar</button></td>
-                <td><button class="btn btn-warning" onclick="HistorialNota(${n.notaAlumnoId})">Historial</button></td>
+
+                <td>
+                    ${new Date(n.fecha)
+                    .toLocaleDateString('es-AR')}
+                </td>
+
+                <td>
+                    <button class="btn btn-info"
+                            onclick="BuscarNota(${n.notaAlumnoID})">
+                        Editar
+                    </button>
+                </td>
+
+                <td>
+                    <button class="btn btn-danger"
+                            onclick="EliminarNota(${n.notaAlumnoID})">
+                        Eliminar
+                    </button>
+                </td>
+
+                <td>
+                    <button class="btn btn-warning"
+                            onclick="HistorialNota(${n.notaAlumnoID})">
+                        Historial
+                    </button>
+                </td>
+
             </tr>
         `);
     });
 }
 
+// CARGAR ALUMNOS
 function CargarAlumnos() {
-    
+
     fetch('https://localhost:7177/Alumno')
     .then(r => r.json())
     .then(data => {
-        let select = $("#AlumnoId, #AlumnoIdEditar");
+
+        let select = $("#AlumnoId");
+
         select.empty();
 
-        select.append(`<option value="" selected disabled>Seleccione un alumno</option>`);
+        select.append(`
+            <option value="">
+                Seleccione un alumno
+            </option>
+        `);
 
         data.forEach(a => {
-            select.append(`<option value="${a.alumnoId}">${a.nombreCompleto}</option>`);
+
+            select.append(`
+                <option value="${a.alumnoId}">
+                    ${a.nombreCompleto}
+                </option>
+            `);
         });
     });
-    $('#ModalAgregarNotaAlumno').on('show.bs.modal', function () {
-    $("#AlumnoId").val("");
-});
 }
 
+// CARGAR ASIGNATURAS
 function CargarAsignaturas() {
+
     fetch('https://localhost:7177/Asignatura')
     .then(r => r.json())
     .then(data => {
-        let select = $("#AsignaturaId, #AsignaturaIdEditar");
+
+        let select = $("#AsignaturaId");
+
         select.empty();
 
-        select.append(`<option value="" selected disabled>Seleccione una asignatura</option>`);
+        select.append(`
+            <option value="">
+                Seleccione una asignatura
+            </option>
+        `);
 
         data.forEach(a => {
-            select.append(`<option value="${a.asignaturaId}">${a.descripcion}</option>`);
+
+            select.append(`
+                <option value="${a.asignaturaId}">
+                    ${a.descripcion}
+                </option>
+            `);
         });
-        
-    });
-    $('#ModalAgregarNotaAlumno').on('show.bs.modal', function () {
-    $("#AsignaturaId").val("");
-});
-}
-
-function CrearNota() {
-
-    let alumnoId = document.getElementById("AlumnoId").value;
-    let asignaturaId = document.getElementById("AsignaturaId").value;
-    let nota = document.getElementById("Nota").value;
-    let fecha = document.getElementById("fecha").value;
-
-    if (!alumnoId) {
-        document.getElementById("AlumnoId").classList.add("is-invalid");
-
-        Swal.fire({
-            icon: 'warning',
-            title: 'Falta seleccionar',
-            text: 'Debes seleccionar un alumno'
-        });
-        return;
-    } else {
-        document.getElementById("AlumnoId").classList.remove("is-invalid");
-    }
-
-    if (!asignaturaId) {
-        document.getElementById("AsignaturaId").classList.add("is-invalid");
-
-        Swal.fire({
-            icon: 'warning',
-            title: 'Falta seleccionar',
-            text: 'Debes seleccionar una asignatura'
-        });
-        return;
-    } else {
-        document.getElementById("AsignaturaId").classList.remove("is-invalid");
-    }
-    
-if (!/^\d{1,2}$/.test(nota) || nota < 1 || nota > 10) {
-    Swal.fire({
-        icon: 'error',
-        title: 'Nota inválida',
-        text: 'La nota debe estar entre 1 y 10'
-    });
-
-    return;
-}
-
-     if (!fecha) {
-        document.getElementById("fecha").classList.add("is-invalid");
-
-        Swal.fire({
-            icon: 'warning',
-            title: 'Falta fecha',
-            text: 'Debes seleccionar una fecha'
-        });
-        return;
-    } else {
-        document.getElementById("fecha").classList.remove("is-invalid");
-    }
-
-    let obj = {
-        alumnoId: parseInt(document.getElementById("AlumnoId").value),
-        asignaturaId: parseInt(document.getElementById("AsignaturaId").value),
-        nota: parseInt(nota),
-        fecha: document.getElementById("fecha").value
-    };
-
-    fetch('https://localhost:7177/NotaAlumno', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(obj)
-    })
-    .then(r => r.json())
-    .then(() => {
-let modal = bootstrap.Modal.getInstance(document.getElementById('ModalAgregarNotaAlumno'));
-
-if (!modal) {
-    modal = new bootstrap.Modal(document.getElementById('ModalAgregarNotaAlumno'));
-}
-
-modal.hide();
-        ObtenerNotas();
     });
 }
 
+// ABRIR MODAL CREAR
+function AbrirModalCrearNota() {
+
+    modoEdicionNota = false;
+
+    document.getElementById("TituloModalNota").innerText =
+        "Crear Nota";
+
+    LimpiarModalNota();
+
+    const modal = new bootstrap.Modal(
+        document.getElementById('ModalNota')
+    );
+
+    modal.show();
+}
+
+// BUSCAR NOTA
 function BuscarNota(id) {
+
     fetch(`https://localhost:7177/NotaAlumno/${id}`)
     .then(r => r.json())
     .then(n => {
 
-        document.getElementById("IdEditar").value = n.notaAlumnoId;
-        document.getElementById("AlumnoIdEditar").value = n.alumnoId;
-        document.getElementById("AsignaturaIdEditar").value = n.asignaturaId;
-        document.getElementById("NotaEditar").value = n.nota;
-        document.getElementById("fechaEditar").value = n.fecha.split('T')[0];
+        modoEdicionNota = true;
 
-        new bootstrap.Modal(document.getElementById('ModalEditarNotaAlumno')).show();
+        document.getElementById("TituloModalNota").innerText =
+            "Editar Nota";
+
+        document.getElementById("NotaAlumnoId").value =
+            n.notaAlumnoID;
+
+        document.getElementById("AlumnoId").value =
+            n.alumnoID;
+
+        document.getElementById("AsignaturaId").value =
+            n.asignaturaID;
+
+        document.getElementById("Nota").value =
+            n.nota;
+
+        document.getElementById("Fecha").value =
+            n.fecha.split('T')[0];
+
+        const modal = new bootstrap.Modal(
+            document.getElementById('ModalNota')
+        );
+
+        modal.show();
     });
 }
 
-function EditarNota() {
+// GUARDAR
+async function GuardarNota() {
 
-let alumnoId = document.getElementById("AlumnoIdEditar").value;
-let asignaturaId = document.getElementById("AsignaturaIdEditar").value;
-let nota = document.getElementById("NotaEditar").value;
-let fecha = document.getElementById("fechaEditar").value;
+    let id =
+        document.getElementById("NotaAlumnoId").value;
 
+    let alumnoId =
+        document.getElementById("AlumnoId").value;
+
+    let asignaturaId =
+        document.getElementById("AsignaturaId").value;
+
+    let nota =
+        document.getElementById("Nota").value;
+
+    let fecha =
+        document.getElementById("Fecha").value;
+
+    // VALIDAR ALUMNO
     if (!alumnoId) {
-        document.getElementById("AlumnoId").classList.add("is-invalid");
+
+        document.getElementById("AlumnoId")
+        .classList.add("is-invalid");
 
         Swal.fire({
             icon: 'warning',
             title: 'Falta seleccionar',
-            text: 'Debes seleccionar un alumno'
+            text: 'Debe seleccionar un alumno'
         });
+
         return;
-    } else {
-        document.getElementById("AlumnoId").classList.remove("is-invalid");
+    }
+    else {
+
+        document.getElementById("AlumnoId")
+        .classList.remove("is-invalid");
     }
 
+    // VALIDAR ASIGNATURA
     if (!asignaturaId) {
-        document.getElementById("AsignaturaId").classList.add("is-invalid");
+
+        document.getElementById("AsignaturaId")
+        .classList.add("is-invalid");
 
         Swal.fire({
             icon: 'warning',
             title: 'Falta seleccionar',
-            text: 'Debes seleccionar una asignatura'
+            text: 'Debe seleccionar una asignatura'
         });
+
         return;
-    } else {
-        document.getElementById("AsignaturaId").classList.remove("is-invalid");
     }
-    
-    if (nota < 1 || nota > 10) {
-        Swal.fire({
-        icon: 'error',
-        title: 'Nota inválida',
-        text: 'La nota debe estar entre 1 y 10'
-    });
-        return;
+    else {
+
+        document.getElementById("AsignaturaId")
+        .classList.remove("is-invalid");
     }
 
-     if (!fecha) {
-        document.getElementById("fecha").classList.add("is-invalid");
+    // VALIDAR NOTA
+    if (!/^\d{1,2}$/.test(nota) ||
+        nota < 1 ||
+        nota > 10) {
+
+        document.getElementById("Nota")
+        .classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Nota inválida',
+            text: 'La nota debe estar entre 1 y 10'
+        });
+
+        return;
+    }
+    else {
+
+        document.getElementById("Nota")
+        .classList.remove("is-invalid");
+    }
+
+    // VALIDAR FECHA
+    if (!fecha) {
+
+        document.getElementById("Fecha")
+        .classList.add("is-invalid");
 
         Swal.fire({
             icon: 'warning',
             title: 'Falta fecha',
-            text: 'Debes seleccionar una fecha'
+            text: 'Debe seleccionar una fecha'
         });
+
         return;
-    } else {
-        document.getElementById("fecha").classList.remove("is-invalid");
     }
+    else {
+
+        document.getElementById("Fecha")
+        .classList.remove("is-invalid");
+    }
+
     let obj = {
-        notaAlumnoId: parseInt(document.getElementById("IdEditar").value),
-        alumnoId: parseInt(document.getElementById("AlumnoIdEditar").value),
-        asignaturaId: parseInt(document.getElementById("AsignaturaIdEditar").value),
-        nota: parseInt(document.getElementById("NotaEditar").value),
-        fecha: document.getElementById("fechaEditar").value
+
+        notaAlumnoID: id || 0,
+
+        alumnoID: parseInt(alumnoId),
+
+        asignaturaID: parseInt(asignaturaId),
+
+        nota: parseInt(nota),
+
+        fecha: fecha
     };
 
-    fetch(`https://localhost:7177/NotaAlumno/${obj.notaAlumnoId}`, {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
+    let url =
+        'https://localhost:7177/NotaAlumno';
+
+    let method = 'POST';
+
+    if (modoEdicionNota) {
+
+        url += `/${id}`;
+
+        method = 'PUT';
+    }
+
+    fetch(url, {
+
+        method: method,
+
+        headers: {
+            'Content-Type': 'application/json'
+        },
+
         body: JSON.stringify(obj)
     })
-    .then(() => {
-        let modal = bootstrap.Modal.getInstance(document.getElementById('ModalEditarNotaAlumno'));
+    .then(async response => {
 
-        if (!modal) {
-            modal = new bootstrap.Modal(document.getElementById('ModalEditarNotaAlumno'));
+        if (!response.ok &&
+            response.status !== 204) {
+
+            throw new Error("Error al guardar");
         }
 
-        modal.hide();
+        bootstrap.Modal
+        .getInstance(document.getElementById('ModalNota'))
+        .hide();
+
         ObtenerNotas();
+
+        LimpiarModalNota();
+    })
+    .catch(error => {
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message
+        });
     });
 }
 
+// ELIMINAR
 function EliminarNota(id) {
-    if (!confirm("¿Eliminar nota?")) return;
+
+    if (!confirm("¿Eliminar nota?"))
+        return;
 
     fetch(`https://localhost:7177/NotaAlumno/${id}`, {
+
         method: 'DELETE'
     })
-    .then(() => ObtenerNotas());
+    .then(() => ObtenerNotas())
+    .catch(error => console.error(error));
 }
 
+// HISTORIAL
 async function HistorialNota(id) {
+
     try {
 
-        const respuesta = await fetch(`https://localhost:7177/Informes/historialnota/${id}`, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        const respuesta = await fetch(
+            `https://localhost:7177/Informes/historialnota/${id}`
+        );
 
         if (!respuesta.ok) {
-            throw new Error('Error al obtener el historial de la nota');
+
+            throw new Error(
+                'Error al obtener historial'
+            );
         }
 
         const historia = await respuesta.json();
 
-        const bodyNotasAlumnos = document.getElementById('Tbody-historial-notas');
-        bodyNotasAlumnos.innerHTML = '';
+        const bodyNotas =
+            document.getElementById(
+                'Tbody-historial-notas'
+            );
+
+        bodyNotas.innerHTML = '';
 
         historia.forEach((notas) => {
 
             const tr = document.createElement('tr');
 
             tr.innerHTML = `
+
                 <td>${notas.fechaCambioString}</td>
+
                 <td>${notas.campoModificado}</td>
+
                 <td>${notas.valorAnterior}</td>
-                 <td>${notas.valorNuevo}</td>
+
+                <td>${notas.valorNuevo}</td>
             `;
 
-            bodyNotasAlumnos.appendChild(tr);
+            bodyNotas.appendChild(tr);
         });
 
-        const modalElement = document.getElementById('ModalHistorialNotaAlumno');
-
-        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+        const modal =
+            bootstrap.Modal.getOrCreateInstance(
+                document.getElementById(
+                    'ModalHistorialNotaAlumno'
+                )
+            );
 
         modal.show();
-
     }
     catch (error) {
-
-        console.error('Error:', error);
 
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'No se pudo obtener el historial de la nota'
+            text: 'No se pudo obtener el historial'
         });
     }
 }
+
+// LIMPIAR
+function LimpiarModalNota() {
+
+    document.getElementById("NotaAlumnoId").value = "";
+
+    document.getElementById("AlumnoId").value = "";
+
+    document.getElementById("AsignaturaId").value = "";
+
+    document.getElementById("Nota").value = "";
+
+    document.getElementById("Fecha").value = "";
+
+    document.getElementById("AlumnoId")
+    .classList.remove("is-invalid");
+
+    document.getElementById("AsignaturaId")
+    .classList.remove("is-invalid");
+
+    document.getElementById("Nota")
+    .classList.remove("is-invalid");
+
+    document.getElementById("Fecha")
+    .classList.remove("is-invalid");
+}
+
+// LIMPIAR AL CERRAR
+document.getElementById('ModalNota')
+.addEventListener('hidden.bs.modal', function () {
+
+    LimpiarModalNota();
+
+});

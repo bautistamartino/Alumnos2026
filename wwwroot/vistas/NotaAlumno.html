@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas Alumnos</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="../css/Style.css">
+</head>
+
+<body class="bg1">
+
+<div id="navbar"></div>
+
+<!-- Tabla -->
+<div class="container mt-4">
+    <h1>Notas Alumnos</h1>
+    <hr>
+
+        <!-- BOTÓN -->
+    <button class="btn btn-success mb-3" onclick="AbrirModalCrearNota()">Agregar</button>
+
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Alumno</th>
+                <th>Asignatura</th>
+                <th>Nota</th>
+                <th>Fecha</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="TablaNotas"></tbody>
+    </table>
+</div>
+
+
+
+<!-- MODAL -->
+<div class="modal fade" id="ModalNota" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content text-dark">
+            <div class="modal-header">
+                <h5 id="TituloModalNota">
+                    Crear Nota
+                </h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="NotaAlumnoId">
+
+                    <label class="form-label">Alumno</label>
+                    <select id="AlumnoId" class="form-control"></select>
+
+                    <label class="form-label mt-2">Asignatura</label>
+                    <select id="AsignaturaId" class="form-control"></select>
+
+                    <label class="form-label mt-2">Nota </label>
+                    <input type="number" id="Nota" class="form-control">
+
+                    <label class="form-label mt-2">Fecha</label>
+                    <input type="date" id="Fecha" class="form-control">
+
+                </div>
+
+            <div class="modal-footer">
+
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+                <button class="btn btn-primary" onclick="GuardarNota()"> Guardar </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL HISTORIAL -->
+<div class="modal fade" id="ModalHistorialNotaAlumno" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 subtitulo-vista">
+                    HISTORIAL DE CAMBIO DE LA NOTA
+                </h1>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <table class="table table-bordered table-hover">
+
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">Fecha edición</th>
+                            <th scope="col">Atributo</th>
+                            <th scope="col">Valor Anterior</th>
+                            <th scope="col">Valor Nuevo</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="Tbody-historial-notas"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../js/notaalumno.js"> </script>
+
+<script>
+    window.onload = function () {
+        ObtenerNotas();
+        CargarAlumnos();
+        CargarAsignaturas();
+    };
+</script>
+
+<script>
+fetch("componentes/navbar.html")
+.then(response => response.text())
+.then(data => {
+    document.getElementById("navbar").innerHTML = data;
+});
+</script>
+
+</body>
+</html>

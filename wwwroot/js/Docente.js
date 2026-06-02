@@ -1,250 +1,348 @@
+let modoEdicionDocente = false;
+
+ObtenerDocentes();
+
 function ObtenerDocentes() {
+
     fetch('https://localhost:7177/Docente')
     .then(response => {
-        if (!response.ok) throw new Error("Error en la API");
+
+        if (!response.ok)
+            throw new Error("Error en la API");
+
         return response.json();
     })
     .then(data => MostrarDocente(data))
-    .catch(error => console.error('Error real:', error));
+    .catch(error => console.error(error));
 }
 
 function MostrarDocente(data) {
+
     $("#TodosLosDocentes").empty();
 
     $.each(data, function (index, docente) {
 
         let sexos = {
+
             1: "Masculino",
             2: "Femenino",
             3: "Otro"
         };
 
-        let sexoTexto = sexos[parseInt(docente.sexo)] || "Sin definir";
+        let sexoTexto =
+            sexos[parseInt(docente.sexo)] || "Sin definir";
 
         $("#TodosLosDocentes").append(
+
             "<tr>" +
+
                 "<td>" + docente.docenteId + "</td>" +
                 "<td>" + docente.nombreCompleto + "</td>" +
                 "<td>" + docente.dni + "</td>" +
                 "<td>" + sexoTexto + "</td>" +
                 "<td>" + docente.email + "</td>" +
-                "<td><button class='btn btn-info' onclick='BuscarDocenteId(" + docente.docenteId + ")'>Editar</button></td>" +
-                "<td><button class='btn btn-danger' onclick='EliminarDocente(" + docente.docenteId + ")'>Eliminar</button></td>" +
-                "<td><button class='btn btn-warning' onclick='HistorialDocente(" + docente.docenteId + ")'>Historial</button></td>" +
+
+                "<td>" +
+                    "<button class='btn btn-info' onclick='BuscarDocenteId(" + docente.docenteId + ")'>" +
+                        "Editar" +
+                    "</button>" +
+                "</td>" +
+
+                "<td>" +
+                    "<button class='btn btn-danger' onclick='EliminarDocente(" + docente.docenteId + ")'>" +
+                        "Eliminar" +
+                    "</button>" +
+                "</td>" +
+
+                "<td>" +
+                    "<button class='btn btn-warning' onclick='HistorialDocente(" + docente.docenteId + ")'>" +
+                        "Historial" +
+                    "</button>" +
+                "</td>" +
+
             "</tr>"
         );
     });
 }
 
+// SOLO NÚMEROS DNI
 const dnicrear = document.getElementById("Dni");
-dnicrear.addEventListener("input", function() {
-    this.value = this.value.replace(/\D/g, "").slice(0, 8);
+
+dnicrear.addEventListener("input", function () {
+
+    this.value =
+        this.value.replace(/\D/g, "").slice(0, 8);
 });
 
-function CrearDocente() {
+// ABRIR MODAL CREAR
+function AbrirModalCrearDocente() {
 
-    let nombre = document.getElementById("Nombre").value.trim();
-    let dni = document.getElementById("Dni").value;
-    let sexo = document.getElementById("Sexo").value;
-    let email = document.getElementById("Email").value.trim();
+    modoEdicionDocente = false;
 
-     // VALIDAR NOMBRE
+    document.getElementById("TituloModalDocente").innerText =
+        "Crear Docente";
+
+    LimpiarModalDocente();
+
+    const modal = new bootstrap.Modal(
+        document.getElementById('ModalDocente')
+    );
+
+    modal.show();
+}
+
+// BUSCAR DOCENTE
+function BuscarDocenteId(id) {
+
+    fetch(`https://localhost:7177/Docente/${id}`)
+    .then(response => {
+
+        if (!response.ok)
+            throw new Error("Error al buscar docente");
+
+        return response.json();
+    })
+    .then(data => {
+
+        modoEdicionDocente = true;
+
+        document.getElementById("TituloModalDocente").innerText =
+            "Editar Docente";
+
+        document.getElementById("DocenteId").value =
+            data.docenteId;
+
+        document.getElementById("Nombre").value =
+            data.nombreCompleto;
+
+        document.getElementById("Dni").value =
+            data.dni;
+
+        document.getElementById("Sexo").value =
+            data.sexo;
+
+        document.getElementById("Email").value =
+            data.email;
+
+        const modal = new bootstrap.Modal(
+            document.getElementById('ModalDocente')
+        );
+
+        modal.show();
+    })
+    .catch(error => console.error(error));
+}
+
+// CREAR Y EDITAR
+async function GuardarDocente() {
+
+    let id = document.getElementById("DocenteId").value;
+
+    let nombre =
+        document.getElementById("Nombre").value.trim();
+
+    let dni =
+        document.getElementById("Dni").value;
+
+    let sexo =
+        document.getElementById("Sexo").value;
+
+    let email =
+        document.getElementById("Email").value.trim();
+
+    // VALIDAR NOMBRE
     if (nombre === "") {
-        document.getElementById("Nombre").classList.add("is-invalid");
+
+        document.getElementById("Nombre")
+        .classList.add("is-invalid");
 
         Swal.fire({
             icon: 'warning',
             title: 'Campo obligatorio',
             text: 'El nombre es obligatorio'
         });
+
         return;
-    } else {
-        document.getElementById("Nombre").classList.remove("is-invalid");
+    }
+    else {
+
+        document.getElementById("Nombre")
+        .classList.remove("is-invalid");
     }
 
     // VALIDAR DNI
     if (!/^\d{8}$/.test(dni)) {
-        document.getElementById("Dni").classList.add("is-invalid");
+
+        document.getElementById("Dni")
+        .classList.add("is-invalid");
 
         Swal.fire({
             icon: 'error',
             title: 'DNI inválido',
             text: 'El DNI debe tener 8 números'
         });
+
         return;
-    } else {
-        document.getElementById("Dni").classList.remove("is-invalid");
+    }
+    else {
+
+        document.getElementById("Dni")
+        .classList.remove("is-invalid");
     }
 
     // VALIDAR SEXO
-    if (!sexo) {
-        document.getElementById("Sexo").classList.add("is-invalid");
+    if (sexo === "") {
+
+        document.getElementById("Sexo")
+        .classList.add("is-invalid");
 
         Swal.fire({
             icon: 'warning',
-            title: 'Falta seleccionar',
+            title: 'Campo obligatorio',
             text: 'Debe seleccionar un sexo'
         });
+
         return;
-    } else {
-        document.getElementById("Sexo").classList.remove("is-invalid");
+    }
+    else {
+
+        document.getElementById("Sexo")
+        .classList.remove("is-invalid");
     }
 
+    // VALIDAR EMAIL
+    if (email === "") {
+
+        document.getElementById("Email")
+        .classList.add("is-invalid");
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo obligatorio',
+            text: 'El email es obligatorio'
+        });
+
+        return;
+    }
+    else {
+
+        document.getElementById("Email")
+        .classList.remove("is-invalid");
+    }
 
     let docente = {
+
+        docenteId: id || 0,
         nombreCompleto: nombre,
         dni: dni,
         sexo: parseInt(sexo),
-        email: document.getElementById("Email").value.trim()
+        email: email
     };
 
-    fetch('https://localhost:7177/Docente', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+    let url = 'https://localhost:7177/Docente';
+    let method = 'POST';
+
+    if (modoEdicionDocente) {
+
+        url += `/${id}`;
+        method = 'PUT';
+    }
+
+    fetch(url, {
+
+        method: method,
+
+        headers: {
+            'Content-Type': 'application/json'
+        },
+
         body: JSON.stringify(docente)
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => {
-                throw new Error(err.mensaje || "Error al crear docente");
-            });
-        }
-        return response.json();
-    })
-    .then(() => {
 
-        bootstrap.Modal.getInstance(document.getElementById('ModalAgregarDocente')).hide();
-
-        document.getElementById("Nombre").value = "";
-        document.getElementById("Dni").value = "";
-        document.getElementById("Sexo").value = "";
-        document.getElementById("Email").value = "";
-
-        ObtenerDocentes();
-    })
-        .catch(error => {
-        alert(error.message); });
-}
-
-function EliminarDocente(id) {
-    if (!confirm("¿Seguro que desea eliminar este docente?")) return;
-
-    fetch(`https://localhost:7177/Docente/${id}`, {
-        method: 'DELETE'
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("Error al eliminar");
-        return; // NO json()
-    })
-    .then(() => {
-        ObtenerDocentes(); 
-    })
-    .catch(error => console.error("Error al eliminar:", error));
-}
-
-function BuscarDocenteId(id) {
-    fetch(`https://localhost:7177/Docente/${id}`, { method: 'GET' })
-    .then(response => {
-        if (!response.ok) throw new Error("Error al buscar docente");
-        return response.json();
-    })
-    .then (data => {
-    document.getElementById("IdDocenteEditar").value = data.docenteId;
-    document.getElementById("NombreEditar").value = data.nombreCompleto;
-    document.getElementById("DniEditar").value = data.dni;
-    document.getElementById("SexoEditar").value = data.sexo;
-    document.getElementById("EmailEditar").value = data.email;
-
-    var modal = new bootstrap.Modal(document.getElementById('ModalEditarDocente'));
-    modal.show();
-})
-    .catch(error => console.error("Error al buscar docente:", error));
-}
-
-        
-
-function EditarDocente() {
-
-    let nombre = document.getElementById("NombreEditar").value.trim();
-    let dni = document.getElementById("DniEditar").value;
-    let sexo = document.getElementById("SexoEditar").value;
-
-    if (nombre === "") {
-        alert("El nombre es obligatorio");
-        return;
-    }
-
-    if (!/^\d{8}$/.test(dni)) {
-        alert("El DNI debe tener 8 números");
-        return;
-    }
-
-    if (sexo === "") {
-        alert("Seleccione un sexo");
-        return;
-    }
-
-
-    let docente = {
-        docenteId: document.getElementById("IdDocenteEditar").value,
-        nombreCompleto: nombre,
-        dni: dni,
-        sexo: parseInt(sexo),
-        
-    };
-
-    
-
-    fetch(`https://localhost:7177/Docente/${docente.docenteId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(docente)
     })
     .then(async response => {
+
         if (!response.ok && response.status !== 204) {
-            let errorMessage = 'Error al editar';
+
+            let errorMessage = "Error al guardar";
+
             try {
+
                 const errorData = await response.json();
-                errorMessage = errorData?.mensaje || errorData?.title || JSON.stringify(errorData);
-            } catch {
-                errorMessage = `Error al editar (código ${response.status})`;
+
+                errorMessage =
+                    errorData.mensaje ||
+                    errorData.title ||
+                    errorMessage;
             }
+            catch { }
+
             throw new Error(errorMessage);
         }
 
-        bootstrap.Modal.getInstance(document.getElementById('ModalEditarDocente')).hide();
+        bootstrap.Modal
+        .getInstance(document.getElementById('ModalDocente'))
+        .hide();
 
         ObtenerDocentes();
+
+        LimpiarModalDocente();
     })
     .catch(error => {
-        console.error(error);
+
         Swal.fire({
             icon: 'error',
-            title: 'Error al editar docente',
+            title: 'Error',
             text: error.message
         });
+
     });
 }
 
+// ELIMINAR
+function EliminarDocente(id) {
 
+    if (!confirm("¿Seguro que desea eliminar este docente?"))
+        return;
+
+    fetch(`https://localhost:7177/Docente/${id}`, {
+
+        method: 'DELETE'
+    })
+    .then(response => {
+
+        if (!response.ok)
+            throw new Error("Error al eliminar");
+
+    })
+    .then(() => {
+
+        ObtenerDocentes();
+    })
+    .catch(error => console.error(error));
+}
+
+// HISTORIAL
 async function HistorialDocente(id) {
+
     try {
-        const respuesta = await fetch(`https://localhost:7177/Informes/historialdocente/${id}`, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+
+        const respuesta = await fetch(
+            `https://localhost:7177/Informes/historialdocente/${id}`
+        );
 
         if (!respuesta.ok) {
-            throw new Error('Error al obtener el historial del docente');
+
+            throw new Error(
+                'Error al obtener el historial del docente'
+            );
         }
 
         const historia = await respuesta.json();
 
-        const bodyDocentes = document.getElementById('Tbody-historial-docente');
-        bodyDocentes.innerHTML = '' ;
+        const bodyDocentes =
+            document.getElementById('Tbody-historial-docente');
 
+        bodyDocentes.innerHTML = '';
 
         historia.forEach((notas) => {
 
@@ -260,35 +358,52 @@ async function HistorialDocente(id) {
             bodyDocentes.appendChild(tr);
         });
 
-        const modalElement = document.getElementById('ModalHistorialDocente');
-
-        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+        const modal = bootstrap.Modal.getOrCreateInstance(
+            document.getElementById('ModalHistorialDocente')
+        );
 
         modal.show();
-
     }
     catch (error) {
-
-        console.error('Error:', error);
 
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'No se pudo obtener el historial del docente'
+            text: 'No se pudo obtener el historial'
         });
     }
 }
 
-// Limpiar modal de agregar docente cuando se cierra
-    document.getElementById('ModalAgregarDocente').addEventListener('hidden.bs.modal', function() {
+// LIMPIAR MODAL
+function LimpiarModalDocente() {
+
+    document.getElementById("DocenteId").value = "";
+
     document.getElementById("Nombre").value = "";
+
     document.getElementById("Dni").value = "";
+
     document.getElementById("Sexo").value = "";
+
     document.getElementById("Email").value = "";
-    
-    // Remover clases de validación
-    document.getElementById("Nombre").classList.remove("is-invalid");
-    document.getElementById("Dni").classList.remove("is-invalid");
-    document.getElementById("Sexo").classList.remove("is-invalid");
-    document.getElementById("Email").classList.remove("is-invalid");
+
+    document.getElementById("Nombre")
+    .classList.remove("is-invalid");
+
+    document.getElementById("Dni")
+    .classList.remove("is-invalid");
+
+    document.getElementById("Sexo")
+    .classList.remove("is-invalid");
+
+    document.getElementById("Email")
+    .classList.remove("is-invalid");
+}
+
+// LIMPIAR AL CERRAR
+document.getElementById('ModalDocente')
+.addEventListener('hidden.bs.modal', function () {
+
+    LimpiarModalDocente();
+
 });
