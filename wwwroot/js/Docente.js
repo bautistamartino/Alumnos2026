@@ -1,4 +1,6 @@
 let modoEdicionDocente = false;
+const apiDocente = 'https://localhost:7177/Docente';
+const apiAsignatura = 'https://localhost:7177/Asignatura';
 
 ObtenerDocentes();
 
@@ -60,9 +62,120 @@ function MostrarDocente(data) {
                     "</button>" +
                 "</td>" +
 
+                "<td>" +
+                    "<button class='btn btn-primary' onclick='AbrirAsignaturasDocente(" + docente.docenteId + ", " + JSON.stringify(docente.nombreCompleto) + ")'>" +
+                        "Asignaturas" +
+                    "</button>" +
+                "</td>" +
+
             "</tr>"
         );
     });
+}
+
+async function AbrirAsignaturasDocente(docenteId, nombreDocente) {
+    document.getElementById('DocenteAsignaturasId').value = docenteId;
+    document.getElementById('NombreDocenteAsignaturas').textContent = nombreDocente;
+
+    try {
+        const [asignaturasRespuesta, asignadasRespuesta] = await Promise.all([
+            fetch(apiAsignatura),
+            fetch(`${apiDocente}/${docenteId}/asignaturas`)
+        ]);
+
+        if (!asignaturasRespuesta.ok || !asignadasRespuesta.ok) {
+            throw new Error('No se pudieron obtener las asignaturas del docente.');
+        }
+
+        const [asignaturas, asignadas] = await Promise.all([
+            asignaturasRespuesta.json(),
+            asignadasRespuesta.json()
+        ]);
+
+        const idsAsignados = new Set(asignadas.map(asignatura => asignatura.asignaturaId));
+        const selector = document.getElementById('AsignaturaParaDocente');
+        selector.innerHTML = '<option value="">Seleccione una asignatura</option>';
+
+        asignaturas
+            .filter(asignatura => !asignatura.eliminado && !idsAsignados.has(asignatura.asignaturaId))
+            .forEach(asignatura => {
+                selector.add(new Option(asignatura.descripcion, asignatura.asignaturaId));
+            });
+
+        MostrarAsignaturasDocente(asignadas);
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('ModalAsignaturasDocente')).show();
+    }
+    catch (error) {
+        Swal.fire({ icon: 'error', title: 'Error', text: error.message });
+    }
+}
+
+function MostrarAsignaturasDocente(asignaturas) {
+    const cuerpo = document.getElementById('AsignaturasDelDocente');
+    cuerpo.innerHTML = '';
+
+    if (asignaturas.length === 0) {
+        cuerpo.innerHTML = '<tr><td colspan="3" class="text-center">No tiene asignaturas asignadas.</td></tr>';
+        return;
+    }
+
+    asignaturas.forEach(asignatura => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${asignatura.descripcion}</td>
+            <td><button class="btn btn-sm btn-danger" onclick="QuitarAsignaturaDocente(${asignatura.asignaturaId})">Quitar</button></td>
+        `;
+        cuerpo.appendChild(fila);
+    });
+}
+
+async function AgregarAsignaturaDocente() {
+    const docenteId = document.getElementById('DocenteAsignaturasId').value;
+    const asignaturaId = document.getElementById('AsignaturaParaDocente').value;
+
+    if (!asignaturaId) {
+        Swal.fire({ icon: 'warning', title: 'Seleccione una asignatura' });
+        return;
+    }
+
+    try {
+        const respuesta = await fetch(`${apiDocente}/${docenteId}/asignaturas`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ asignaturaID: parseInt(asignaturaId) })
+        });
+
+        if (!respuesta.ok) {
+            const error = await respuesta.json();
+            throw new Error(error.mensaje || 'No se pudo asignar la asignatura.');
+        }
+
+        await AbrirAsignaturasDocente(docenteId, document.getElementById('NombreDocenteAsignaturas').textContent);
+    }
+    catch (error) {
+        Swal.fire({ icon: 'error', title: 'Error', text: error.message });
+    }
+}
+
+async function QuitarAsignaturaDocente(asignaturaId) {
+    const docenteId = document.getElementById('DocenteAsignaturasId').value;
+
+    if (!confirm('¿Seguro que desea quitar esta asignatura?')) {
+        return;
+    }
+
+    try {
+        const respuesta = await fetch(`${apiDocente}/${docenteId}/asignaturas/${asignaturaId}`, { method: 'DELETE' });
+
+        if (!respuesta.ok) {
+            throw new Error('No se pudo quitar la asignatura.');
+        }
+
+        await AbrirAsignaturasDocente(docenteId, document.getElementById('NombreDocenteAsignaturas').textContent);
+    }
+    catch (error) {
+        Swal.fire({ icon: 'error', title: 'Error', text: error.message });
+    }
 }
 
 // SOLO NÚMEROS DNI

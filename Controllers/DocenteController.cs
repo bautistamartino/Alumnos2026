@@ -50,6 +50,82 @@ public async Task<IActionResult> GetDocente()
             return docente;
         }
 
+        [HttpGet("{id}/asignaturas")]
+        public async Task<IActionResult> GetAsignaturasDocente(int id)
+        {
+            if (!await _context.Docentes.AnyAsync(docente => docente.DocenteId == id))
+            {
+                return NotFound(new { mensaje = "El docente no existe." });
+            }
+
+            var asignaturas = await _context.AsignaturasDocentes
+                .Where(relacion => relacion.DocenteID == id)
+                .Join(_context.Asignaturas,
+                    relacion => relacion.AsignaturaID,
+                    asignatura => asignatura.AsignaturaId,
+                    (relacion, asignatura) => new
+                    {
+                        asignaturaDocenteId = relacion.AsignaturaDocenteID,
+                        asignaturaId = asignatura.AsignaturaId,
+                        descripcion = asignatura.Descripcion,
+                        año = asignatura.Año
+                    })
+                .OrderBy(asignatura => asignatura.descripcion)
+                .ToListAsync();
+
+            return Ok(asignaturas);
+        }
+
+        [HttpPost("{id}/asignaturas")]
+        public async Task<IActionResult> AgregarAsignaturaDocente(int id, [FromBody] AsignaturaDocente solicitud)
+        {
+            if (!await _context.Docentes.AnyAsync(docente => docente.DocenteId == id))
+            {
+                return NotFound(new { mensaje = "El docente no existe." });
+            }
+
+            if (!await _context.Asignaturas.AnyAsync(asignatura => asignatura.AsignaturaId == solicitud.AsignaturaID))
+            {
+                return NotFound(new { mensaje = "La asignatura no existe." });
+            }
+
+            var yaAsignada = await _context.AsignaturasDocentes.AnyAsync(relacion =>
+                relacion.DocenteID == id && relacion.AsignaturaID == solicitud.AsignaturaID);
+
+            if (yaAsignada)
+            {
+                return Conflict(new { mensaje = "La asignatura ya está asignada a este docente." });
+            }
+
+            var relacionNueva = new AsignaturaDocente
+            {
+                DocenteID = id,
+                AsignaturaID = solicitud.AsignaturaID
+            };
+
+            _context.AsignaturasDocentes.Add(relacionNueva);
+            await _context.SaveChangesAsync();
+
+            return Ok(relacionNueva);
+        }
+
+        [HttpDelete("{id}/asignaturas/{asignaturaId}")]
+        public async Task<IActionResult> QuitarAsignaturaDocente(int id, int asignaturaId)
+        {
+            var relacion = await _context.AsignaturasDocentes.SingleOrDefaultAsync(relacion =>
+                relacion.DocenteID == id && relacion.AsignaturaID == asignaturaId);
+
+            if (relacion == null)
+            {
+                return NotFound(new { mensaje = "La asignatura no está asignada a este docente." });
+            }
+
+            _context.AsignaturasDocentes.Remove(relacion);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         // PUT: api/Docente/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

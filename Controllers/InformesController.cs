@@ -136,6 +136,7 @@ namespace _2026Alumnos.Controllers
                     {
                         AsignaturaID = asignatura.AsignaturaId,
                         AsignaturaNombre = asignatura.Descripcion,
+                        Año = asignatura.Año,
                         Promedio = decimal.Round(
                             Convert.ToDecimal(notasAsignatura.Sum(n => n.Nota)) / notasAsignatura.Count,
                             2

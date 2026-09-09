@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _2026Alumnos.models;
 
@@ -11,9 +12,11 @@ using _2026Alumnos.models;
 namespace _2026Alumnos.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20260908224139_NuevasPropiedadesAsignatura")]
+    partial class NuevasPropiedadesAsignatura
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,25 +341,6 @@ namespace _2026Alumnos.Migrations
                     b.HasIndex("CarreraId");
 
                     b.ToTable("Asignaturas");
-                });
-
-            modelBuilder.Entity("_2026Alumnos.models.AsignaturaDocente", b =>
-                {
-                    b.Property<int>("AsignaturaDocenteID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AsignaturaDocenteID"));
-
-                    b.Property<int>("AsignaturaID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DocenteID")
-                        .HasColumnType("int");
-
-                    b.HasKey("AsignaturaDocenteID");
-
-                    b.ToTable("AsignaturasDocentes");
                 });
 
             modelBuilder.Entity("_2026Alumnos.models.Carrera", b =>

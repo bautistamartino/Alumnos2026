@@ -5,19 +5,25 @@ namespace _2026Alumnos.models
 {
     public class Alumno
     {
+        [JsonPropertyName("alumnoId")]
         public int AlumnoId { get; set; }
 
+        [JsonPropertyName("nombreCompleto")]
         public string? NombreCompleto { get; set; } = null!;
 
-        public string? DNI { get; set; }   
+        [JsonPropertyName("dni")]
+        public string? DNI { get; set; }
 
+        [JsonPropertyName("sexo")]
         public Sexo Sexo { get; set; }
 
+        [JsonPropertyName("domicilio")]
         public string? Domicilio { get; set; } = null!;
 
-          public string? Email { get; set; } = null!;
+        [JsonPropertyName("email")]
+        public string? Email { get; set; } = null!;
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public ICollection<NotaAlumno>? Notas { get; set; }
     }
 

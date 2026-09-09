@@ -123,6 +123,7 @@ asignaturas.forEach((asignatura) => {
 
     row.innerHTML = `
         <td>${asignatura.asignaturaNombre}</td>
+        <td class="text-center">${asignatura.año}</td>
         <td class="text-center">
             ${Number(asignatura.promedio || 0).toFixed(2)}
         </td>

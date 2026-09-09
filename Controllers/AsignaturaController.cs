@@ -55,6 +55,17 @@ namespace _2026Alumnos.Controllers
                 return BadRequest();
             }
 
+            var carrera = await _context.Carreras.FindAsync(asignatura.CarreraId);
+            if (carrera == null)
+            {
+                return BadRequest(new { mensaje = "La carrera seleccionada no existe." });
+            }
+
+            if (asignatura.Año < 1 || asignatura.Año > carrera.Duracion)
+            {
+                return BadRequest(new { mensaje = "El año de la asignatura no es válido para la duración de la carrera." });
+            }
+
             _context.Entry(asignatura).State = EntityState.Modified;
 
             try
@@ -82,10 +93,32 @@ namespace _2026Alumnos.Controllers
         public async Task<ActionResult<Asignatura>> PostAsignatura(Asignatura asignatura)
         {
             asignatura.Descripcion = asignatura.Descripcion?.Trim().ToUpper();
+
+            var carrera = await _context.Carreras.FindAsync(asignatura.CarreraId);
+            if (carrera == null)
+            {
+                return BadRequest(new { mensaje = "La carrera seleccionada no existe." });
+            }
+
+            if (asignatura.Año < 1 || asignatura.Año > carrera.Duracion)
+            {
+                return BadRequest(new { mensaje = "El año de la asignatura no es válido para la duración de la carrera." });
+            }
+
             _context.Asignaturas.Add(asignatura);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAsignatura", new { id = asignatura.AsignaturaId }, asignatura);
+            return CreatedAtAction(
+                nameof(GetAsignatura),
+                new { id = asignatura.AsignaturaId },
+                new
+                {
+                    asignaturaId = asignatura.AsignaturaId,
+                    descripcion = asignatura.Descripcion,
+                    año = asignatura.Año,
+                    carreraId = asignatura.CarreraId,
+                    eliminado = asignatura.Eliminado
+                });
         }
 
         // DELETE: api/Asignatura/5

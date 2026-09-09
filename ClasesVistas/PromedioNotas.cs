@@ -31,6 +31,7 @@ namespace _2026Alumnos.ClasesVistas
     {
         public int AsignaturaID { get; set; }
         public string? AsignaturaNombre { get; set; }
+        public int Año { get; set; }
         public decimal Promedio { get; set; }  
     }
 }

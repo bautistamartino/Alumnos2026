@@ -35,10 +35,42 @@
             <th></th>
             <th></th>
             <th></th>
+            <th>Asignaturas</th>
         </tr>
     </thead>
     <tbody id="TodosLosDocentes"></tbody>
 </table>
+</div>
+
+<!-- MODAL ASIGNATURAS DEL DOCENTE -->
+<div class="modal fade" id="ModalAsignaturasDocente" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content text-dark">
+            <div class="modal-header">
+                <h5 class="modal-title">Asignaturas a cargo de <span id="NombreDocenteAsignaturas"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="DocenteAsignaturasId">
+                <div class="input-group mb-3">
+                    <select id="AsignaturaParaDocente" class="form-select">
+                        <option value="">Seleccione una asignatura</option>
+                    </select>
+                    <button class="btn btn-primary" type="button" onclick="AgregarAsignaturaDocente()">Agregar</button>
+                </div>
+
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Asignatura</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="AsignaturasDelDocente"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _2026Alumnos.models;
 
@@ -11,9 +12,11 @@ using _2026Alumnos.models;
 namespace _2026Alumnos.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20260908221940_AgregarCarrera")]
+    partial class AgregarCarrera
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,12 +324,6 @@ namespace _2026Alumnos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AsignaturaId"));
 
-                    b.Property<int>("Año")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CarreraId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
@@ -335,28 +332,7 @@ namespace _2026Alumnos.Migrations
 
                     b.HasKey("AsignaturaId");
 
-                    b.HasIndex("CarreraId");
-
                     b.ToTable("Asignaturas");
-                });
-
-            modelBuilder.Entity("_2026Alumnos.models.AsignaturaDocente", b =>
-                {
-                    b.Property<int>("AsignaturaDocenteID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AsignaturaDocenteID"));
-
-                    b.Property<int>("AsignaturaID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DocenteID")
-                        .HasColumnType("int");
-
-                    b.HasKey("AsignaturaDocenteID");
-
-                    b.ToTable("AsignaturasDocentes");
                 });
 
             modelBuilder.Entity("_2026Alumnos.models.Carrera", b =>
@@ -522,17 +498,6 @@ namespace _2026Alumnos.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("_2026Alumnos.models.Asignatura", b =>
-                {
-                    b.HasOne("_2026Alumnos.models.Carrera", "Carrera")
-                        .WithMany("Asignaturas")
-                        .HasForeignKey("CarreraId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Carrera");
-                });
-
             modelBuilder.Entity("_2026Alumnos.models.NotaAlumno", b =>
                 {
                     b.HasOne("_2026Alumnos.models.Alumno", "Alumno")
@@ -559,11 +524,6 @@ namespace _2026Alumnos.Migrations
             modelBuilder.Entity("_2026Alumnos.models.Alumno", b =>
                 {
                     b.Navigation("Notas");
-                });
-
-            modelBuilder.Entity("_2026Alumnos.models.Carrera", b =>
-                {
-                    b.Navigation("Asignaturas");
                 });
 
             modelBuilder.Entity("_2026Alumnos.models.Docente", b =>
